@@ -1,0 +1,52 @@
+Shops:
+    ExampleShop:
+        #The command that will open the Shop
+        Command: /ExampleShop
+        #The Permission to open the Shop
+        Permission: permissionsshop.shops.exampleshop
+        #The Price to open the Shop
+        Price: 0.0
+        #The GUI name of the Shop
+        GuiName: '&6ExampleShop'
+        Categories:
+            ExampleCategory:
+                #The Permission to open the Category
+                Permission: permissionsshop.shops.exampleshop.categories.examplecategory
+                #The Price to open the Category
+                Price: 0.0
+                #The Display Name of the Category
+                Name: '&2ExampleCategory'
+                #The Description of the Category
+                Description: '&eThis is an Example Category!'
+                #The Item of the Category
+                Item: '35:9'
+                Packages:
+                    ExamplePackage:
+                        #The Permission to buy the Package
+                        Permission: permissionsshop.shops.exampleshop.categories.examplecategory.packages.examplepackage
+                        #The Price to buy the Package
+                        Price: 100.0
+                        #The Display Name of the Package
+                        Name: '&2ExamplePackage'
+                        #The Description of the Package
+                        Description: '&eThis is an Example Package!'
+                        #The Item of the Package
+                        Item: '35:10'
+                        #The commands that will be executed when a Player buys this Package
+                        Commands:
+                        - 'broadcast %playername% has bought the Example Package!'
+        Packages:
+            ExamplePackage:
+                #The Permission to buy the Package
+                Permission: permissionsshop.shops.exampleshop.categories.examplecategory.packages.examplepackage
+                #The Price to buy the Package
+                Price: 100.0
+                #The Display Name of the Package
+                Name: '&2ExamplePackage'
+                #The Description of the Package
+                Description: '&eThis is an Example Package!'
+                #The Item of the Package
+                Item: '35:10'
+                #The commands that will be executed when a Player buys this Package
+                Commands:
+                - 'broadcast %playername% has bought the Example Package!'

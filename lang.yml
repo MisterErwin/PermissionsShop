@@ -1,0 +1,8 @@
+NotEnoughMoney: '&cYou don''t have enough money to buy this!'
+CommandNoPermission: '&4You don''t have permission to do this!'
+ShopNoPermission: '&4You don''t have permission to open this Shop!'
+CategoryNoPermission: '&4You don''t have permission to open this Category!'
+PackageNoPermission: '&4You don''t have permission to buy this Package!'
+ConfirmGuiName: '&1Please confirm your Purchase'
+RefusedPurchase: '&cYou refused your Purchase!'
+SuccessfulPurchase: '&aYou successfully purchased this Package!'
