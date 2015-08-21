@@ -20,42 +20,42 @@ public class Main extends JavaPlugin{
     private Lang lang;
     private Sales sales;
     private Shops shops;
-	public void onEnable(){
-		General.sendColoredMessage(this, "Loading Configs...", ChatColor.GREEN);
+    public void onEnable(){
+        General.sendColoredMessage(this, "Loading Configs...", ChatColor.GREEN);
         loadConfigs();
-		General.sendColoredMessage(this, "Registering Command...", ChatColor.GREEN);
-		getCommand("PermissionsShop").setExecutor(new Commands(this));
-		new API(this);
-		new PlayerListener(this);
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        General.sendColoredMessage(this, "Registering Command...", ChatColor.GREEN);
+        getCommand("PermissionsShop").setExecutor(new Commands(this));
+        new API(this);
+        new PlayerListener(this);
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
-        	General.sendColoredMessage(this, "Successfully hooked into Vault!", ChatColor.GREEN);
+            General.sendColoredMessage(this, "Successfully hooked into Vault!", ChatColor.GREEN);
             economy = economyProvider.getProvider();
         } else {
-        	General.sendColoredMessage(this, "Failed to hook into Vault!", ChatColor.RED);
-        	Bukkit.getPluginManager().disablePlugin(this);
+            General.sendColoredMessage(this, "Failed to hook into Vault!", ChatColor.RED);
+            Bukkit.getPluginManager().disablePlugin(this);
         }
         UpdateChecker checker = new UpdateChecker(5620, getDescription().getVersion());
-		if(checker.checkUpdate()){
-			General.sendColoredMessage(this, "A new update is available!" + checker.getVersion(), ChatColor.GOLD);
+        if(checker.checkUpdate()){
+            General.sendColoredMessage(this, "A new update is available!" + checker.getVersion(), ChatColor.GOLD);
             General.sendColoredMessage(this, "Version " + checker.getVersion() + " (Current: " + getDescription().getVersion() + ")", ChatColor.GOLD);
         } else {
-			General.sendColoredMessage(this, "You are up to date!", ChatColor.GREEN);
-		}
-		General.sendColoredMessage(this, "Done!", ChatColor.GREEN);
-	}
-	
-	public void onDisable(){
-		for(Player p : Bukkit.getOnlinePlayers()){
-			p.closeInventory();
-		}
-	}
-	
-	public double getMoney(Player p){
+            General.sendColoredMessage(this, "You are up to date!", ChatColor.GREEN);
+        }
+        General.sendColoredMessage(this, "Done!", ChatColor.GREEN);
+    }
+
+    public void onDisable(){
+        for(Player p : Bukkit.getOnlinePlayers()){
+            p.closeInventory();
+        }
+    }
+
+    public double getMoney(Player p){
 		return economy.getBalance(p);
 	}
-	
-	public void removeMoney(Player p, double amount){
+
+    public void removeMoney(Player p, double amount){
 		economy.withdrawPlayer(p, amount);
 	}
 
