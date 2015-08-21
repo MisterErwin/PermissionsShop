@@ -14,7 +14,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin{
-	private Economy economy = null;
+    private Economy economy = null;
     private Config config;
     private Discounts discounts;
     private Lang lang;
