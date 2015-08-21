@@ -52,11 +52,11 @@ public class Main extends JavaPlugin{
     }
 
     public double getMoney(Player p){
-		return economy.getBalance(p);
+        return economy.getBalance(p);
 	}
 
     public void removeMoney(Player p, double amount){
-		economy.withdrawPlayer(p, amount);
+        economy.withdrawPlayer(p, amount);
 	}
 
     public Shops getShops() {
