@@ -38,7 +38,7 @@ Shops:
         Packages:
             ExamplePackage:
                 #The Permission to buy the Package
-                Permission: permissionsshop.shops.exampleshop.categories.examplecategory.packages.examplepackage
+                Permission: permissionsshop.shops.exampleshop.packages.examplepackage
                 #The Price to buy the Package
                 Price: 100.0
                 #The Display Name of the Package

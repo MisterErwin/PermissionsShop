@@ -1,7 +1,7 @@
 #If this is enabled, a Package that is on Sale will glow
 SaleGlow: true
 #The prefix that will be added to a Package when it's on Sale
-SalePrefix: '§c[§lON SALE§c] '
+SalePrefix: '&c[&lON SALE&c] '
 Sales:
     ExampleSale:
         #The Permission a Player needs to have for this Sale to apply
