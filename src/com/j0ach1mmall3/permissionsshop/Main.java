@@ -22,11 +22,14 @@ public class Main extends JavaPlugin{
     private Shops shops;
     public void onEnable(){
         General.sendColoredMessage(this, "Loading Configs...", ChatColor.GREEN);
-        loadConfigs();
-        General.sendColoredMessage(this, "Registering Command...", ChatColor.GREEN);
-        getCommand("PermissionsShop").setExecutor(new Commands(this));
+        config = new Config(this);
+        lang = new Lang(this);
+        shops = new Shops(this);
+        if(config.isEnableDiscounts()) discounts = new Discounts(this);
+        if(config.isEnableSales()) sales = new Sales(this);
         new API(this);
         new PlayerListener(this);
+        getCommand("PermissionsShop").setExecutor(new Commands(this));
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
             General.sendColoredMessage(this, "Successfully hooked into Vault!", ChatColor.GREEN);
@@ -49,6 +52,19 @@ public class Main extends JavaPlugin{
         for(Player p : Bukkit.getOnlinePlayers()){
             p.closeInventory();
         }
+    }
+
+    public void reload() {
+        for(Player p : Bukkit.getOnlinePlayers()){
+            p.closeInventory();
+        }
+        config = new Config(this);
+        lang = new Lang(this);
+        shops = new Shops(this);
+        if(config.isEnableDiscounts()) discounts = new Discounts(this);
+        if(config.isEnableSales()) sales = new Sales(this);
+        new API(this);
+        new PlayerListener(this);
     }
 
     public double getMoney(Player p){
@@ -77,13 +93,5 @@ public class Main extends JavaPlugin{
 
     public Config getBabies() {
         return config;
-    }
-
-    public void loadConfigs() {
-        config = new Config(this);
-        lang = new Lang(this);
-        shops = new Shops(this);
-        if(config.isEnableDiscounts()) discounts = new Discounts(this);
-        if(config.isEnableSales()) sales = new Sales(this);
     }
 }

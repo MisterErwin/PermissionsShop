@@ -29,25 +29,22 @@ import java.util.List;
 
 public class PlayerListener implements Listener {
 	private Main plugin;
-    private Config config;
-    private Lang lang;
-    private Sales sales;
     private GUI shopGui;
     private GUI categoryGui;
     private GUI confirmGui;
     private Enchantment glow;
-	private HashMap<Player, Shop> shopMap = new HashMap<Player, Shop>();
-	private HashMap<Player, Category> categoryMap = new HashMap<Player, Category>();
-	private HashMap<Player, Package> packageMap = new HashMap<Player, Package>();
+	private HashMap<Player, Shop> shopMap = new HashMap<>();
+	private HashMap<Player, Category> categoryMap = new HashMap<>();
+	private HashMap<Player, Package> packageMap = new HashMap<>();
 	public PlayerListener(Main plugin){
 		this.plugin = plugin;
-        this.config = plugin.getBabies();
-        this.lang = plugin.getLang();
-        this.sales = plugin.getSales();
-        CustomEnchantment ce = new CustomEnchantment("GLOW", null, null, 1, 10);
+        CustomEnchantment ce = new CustomEnchantment("SALESGLOW", null, null, 1, 10);
         ce.register();
         this.glow = ce.getEnchantment();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        shopMap.clear();
+        categoryMap.clear();
+        packageMap.clear();
 	}
 	
 	@EventHandler(ignoreCancelled=true)
@@ -65,7 +62,7 @@ public class PlayerListener implements Listener {
 			if(p.hasPermission(shop.getPermission())){
 				openGUI(p, shop);
 			} else {
-				p.sendMessage(Placeholders.parse(lang.getShopNoPermission(), p));
+				p.sendMessage(Placeholders.parse(plugin.getLang().getShopNoPermission(), p));
 			}
 		}
 	}
@@ -77,15 +74,15 @@ public class PlayerListener implements Listener {
 	}
 	
 	private ItemStack[] getShopContents(Player p, Shop shop){
-		List<ItemStack> categories = new ArrayList<ItemStack>();
+		List<ItemStack> categories = new ArrayList<>();
 		for(Category c : shop.getCategories()){
 			categories.add(c.getItem());
 		}
-		List<ItemStack> packages = new ArrayList<ItemStack>();
+		List<ItemStack> packages = new ArrayList<>();
 		for(Package pckage : shop.getPackages()){
 			packages.add(getItem(p, shop, pckage));
 		}
-		List<ItemStack> contents = new ArrayList<ItemStack>(categories);
+		List<ItemStack> contents = new ArrayList<>(categories);
 		contents.addAll(packages);
 		ItemStack[] finalContents = new ItemStack[contents.size()];
 		for(int a=0;a<contents.size();a++){
@@ -103,7 +100,7 @@ public class PlayerListener implements Listener {
                 if(e.getSlot() == 10) checkout(p, packageMap.get(p));
                 if(e.getSlot() == 16){
                     General.playSound(p, Sound.LAVA_POP);
-                    p.sendMessage(Placeholders.parse(lang.getRefusedPurchase(), p));
+                    p.sendMessage(Placeholders.parse(plugin.getLang().getRefusedPurchase(), p));
                     p.closeInventory();
                 }
                 return;
@@ -131,7 +128,7 @@ public class PlayerListener implements Listener {
                                 General.playSound(p, Sound.CLICK);
                                 openCategory(p, shop, c);
                             } else {
-                                p.sendMessage(Placeholders.parse(lang.getCategoryNoPermission(), p));
+                                p.sendMessage(Placeholders.parse(plugin.getLang().getCategoryNoPermission(), p));
                             }
                         } else {
                             General.playSound(p, Sound.CLICK);
@@ -150,6 +147,7 @@ public class PlayerListener implements Listener {
 	}
 	
 	private ItemStack[] getCategoryContents(Player p, Shop shop, Category category){
+        Config config = plugin.getBabies();
 		ItemStack[] packages = new ItemStack[category.getPackages().size()+1];
 		for(int a=0;a<category.getPackages().size();a++){
 			packages[a] = getItem(p, shop, category.getPackages().get(a));
@@ -159,6 +157,8 @@ public class PlayerListener implements Listener {
 	}
 	
 	private void handlePurchase(Player p, Package pckage){
+        Lang lang = plugin.getLang();
+        Config config = plugin.getBabies();
 		p.closeInventory();
 		if(!p.hasPermission(pckage.getPermission())){
 			p.sendMessage(Placeholders.parse(lang.getPackageNoPermission(), p));
@@ -194,10 +194,11 @@ public class PlayerListener implements Listener {
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholders.parse(command, p));
 		}
         General.playSound(p, Sound.LEVEL_UP);
-        p.sendMessage(Placeholders.parse(lang.getSuccessfulPurchase(), p));
+        p.sendMessage(Placeholders.parse(plugin.getLang().getSuccessfulPurchase(), p));
 	}
 	
 	private CustomItem getItem(Player p, Shop shop, Package pckage){
+        Sales sales = plugin.getSales();
 		CustomItem ci = pckage.getItem();
 		List<String> lore = ci.getItemMeta().getLore();
 		if(!lore.get(lore.size()-1).contains("Price:")){
@@ -207,7 +208,7 @@ public class PlayerListener implements Listener {
 		if(!API.getActiveSales(shop).isEmpty()){
 			if(sales.isSaleGlow()) ci.addEnchantment(glow, 1);
 			String name = ci.getItemMeta().getDisplayName();
-			if(!name.startsWith(Placeholders.parse(sales.getSalePrefix(), p))) ci.setName(sales.getSalePrefix() + name);
+			if(!name.startsWith(Placeholders.parse(sales.getSalePrefix(), p))) ci.setName(Placeholders.parse(sales.getSalePrefix(), p) + name);
 		}
 		return ci;
 	}
@@ -228,4 +229,10 @@ public class PlayerListener implements Listener {
 		}
 		return price;
 	}
+
+    public void cleanup() {
+        packageMap.clear();
+        shopMap.clear();
+        categoryMap.clear();
+    }
 }
