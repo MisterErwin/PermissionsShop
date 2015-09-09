@@ -1,24 +1,17 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
-import com.j0ach1mmall3.jlib.storage.yaml.Config;
+import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
 import com.j0ach1mmall3.jlib.storage.yaml.ConfigMethods;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.Discount;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Discounts {
-	private Main plugin;
-    private Config customConfig;
-	private FileConfiguration config;
+public class Discounts extends ConfigLoader {
     private List<Discount> discounts;
 	public Discounts(Main plugin) {
-        this.plugin = plugin;
-        this.customConfig = new Config("discounts.yml", plugin);
-        customConfig.saveDefaultConfig();
-        this.config = customConfig.getConfig();
+        super("discounts.yml", plugin);
         discounts = loadDiscounts();
 	}
 	

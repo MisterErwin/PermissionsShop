@@ -1,12 +1,9 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
+import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
-import org.bukkit.configuration.file.FileConfiguration;
 
-public class Config {
-	private Main plugin;
-    private com.j0ach1mmall3.jlib.storage.yaml.Config customConfig;
-	private FileConfiguration config;
+public class Config extends ConfigLoader {
 	private boolean enableDiscounts;
 	private boolean enableSales;
 	private boolean purchaseConfirmation;
@@ -21,10 +18,7 @@ public class Config {
 	private String refuseItem_Description;
 	private String refuseItem_Item;
 	public Config(Main plugin) {
-        this.plugin = plugin;
-        this.customConfig = new com.j0ach1mmall3.jlib.storage.yaml.Config("config.yml", plugin);
-		customConfig.saveDefaultConfig();
-		this.config = customConfig.getConfig();
+        super("config.yml", plugin);
         enableDiscounts = config.getBoolean("EnableDiscounts");
         enableSales = config.getBoolean("EnableSales");
         purchaseConfirmation = config.getBoolean("PurchaseConfirmation");

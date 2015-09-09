@@ -1,6 +1,6 @@
 package com.j0ach1mmall3.permissionsshop.commands;
 
-import com.j0ach1mmall3.jlib.methods.Placeholders;
+import com.j0ach1mmall3.jlib.integration.Placeholders;
 import com.j0ach1mmall3.permissionsshop.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

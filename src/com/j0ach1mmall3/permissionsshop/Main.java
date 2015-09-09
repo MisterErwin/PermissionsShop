@@ -1,7 +1,7 @@
 package com.j0ach1mmall3.permissionsshop;
 
+import com.j0ach1mmall3.jlib.integration.UpdateChecker;
 import com.j0ach1mmall3.jlib.methods.General;
-import com.j0ach1mmall3.jlib.objects.UpdateChecker;
 import com.j0ach1mmall3.permissionsshop.api.API;
 import com.j0ach1mmall3.permissionsshop.commands.Commands;
 import com.j0ach1mmall3.permissionsshop.config.*;

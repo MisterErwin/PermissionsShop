@@ -1,30 +1,22 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
 import com.j0ach1mmall3.jlib.methods.Parsing;
-import com.j0ach1mmall3.jlib.storage.yaml.Config;
+import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
 import com.j0ach1mmall3.jlib.storage.yaml.ConfigMethods;
-import com.j0ach1mmall3.jlib.storage.yaml.Configs;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.Sale;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Sales {
-	private Main plugin;
-    private Config customConfig;
-	private FileConfiguration config;
+public class Sales extends ConfigLoader {
     private boolean saleGlow;
     private String salePrefix;
     private List<Sale> sales;
 	public Sales(Main plugin){
-        this.plugin = plugin;
-        this.customConfig = new Config("sales.yml", plugin);
-        customConfig.saveDefaultConfig();
-		config = Configs.getConfig("sales.yml", plugin);
+        super("sales.yml", plugin);
 		saleGlow = config.getBoolean("SaleGlow");
 		salePrefix = config.getString("SalePrefix");
 		sales = loadSales();

@@ -1,11 +1,11 @@
 package com.j0ach1mmall3.permissionsshop.listeners;
 
+import com.j0ach1mmall3.jlib.integration.Placeholders;
+import com.j0ach1mmall3.jlib.inventory.CustomEnchantment;
+import com.j0ach1mmall3.jlib.inventory.CustomItem;
+import com.j0ach1mmall3.jlib.inventory.GUI;
 import com.j0ach1mmall3.jlib.methods.General;
 import com.j0ach1mmall3.jlib.methods.Parsing;
-import com.j0ach1mmall3.jlib.methods.Placeholders;
-import com.j0ach1mmall3.jlib.objects.CustomEnchantment;
-import com.j0ach1mmall3.jlib.objects.CustomItem;
-import com.j0ach1mmall3.jlib.objects.GUI;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.*;
 import com.j0ach1mmall3.permissionsshop.api.Package;
@@ -71,6 +71,8 @@ public class PlayerListener implements Listener {
         shopGui = new GUI(Placeholders.parse(shop.getGuiName(), p), getShopContents(p, shop));
         shopGui.open(p);
 		shopMap.put(p, shop);
+        categoryMap.remove(p);
+        packageMap.remove(p);
 	}
 	
 	private ItemStack[] getShopContents(Player p, Shop shop){
@@ -144,6 +146,7 @@ public class PlayerListener implements Listener {
         categoryGui = new GUI(Placeholders.parse(shop.getGuiName(), p), getCategoryContents(p, shop, category));
 		categoryGui.open(p);
 		categoryMap.put(p, category);
+        packageMap.remove(p);
 	}
 	
 	private ItemStack[] getCategoryContents(Player p, Shop shop, Category category){

@@ -1,9 +1,10 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
+import com.j0ach1mmall3.jlib.integration.Placeholders;
+import com.j0ach1mmall3.jlib.inventory.CustomItem;
 import com.j0ach1mmall3.jlib.methods.Parsing;
-import com.j0ach1mmall3.jlib.methods.Placeholders;
-import com.j0ach1mmall3.jlib.objects.CustomItem;
 import com.j0ach1mmall3.jlib.storage.yaml.Config;
+import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
 import com.j0ach1mmall3.jlib.storage.yaml.ConfigMethods;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.Category;
@@ -14,16 +15,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shops {
-	private Main plugin;
-    private Config customConfig;
-	private FileConfiguration config;
+public class Shops extends ConfigLoader {
     private List<Shop> shops;
 	public Shops(Main plugin){
-        this.plugin = plugin;
-        this.customConfig = new Config("shops.yml", plugin);
-		customConfig.saveDefaultConfig();
-		config = customConfig.getConfig();
+        super("shops.yml", plugin);
 		shops = loadShops();
 	}
 	

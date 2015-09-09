@@ -1,13 +1,9 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
-import com.j0ach1mmall3.jlib.storage.yaml.Config;
+import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
-import org.bukkit.configuration.file.FileConfiguration;
 
-public class Lang {
-	private Main plugin;
-    private Config customConfig;
-	private FileConfiguration config;
+public class Lang extends ConfigLoader {
 	private String notEnoughMoney;
     private String commandNoPermission;
     private String shopNoPermission;
@@ -17,10 +13,7 @@ public class Lang {
     private String refusedPurchase;
     private String successfulPurchase;
 	public Lang(Main plugin) {
-        this.plugin = plugin;
-        this.customConfig = new Config("lang.yml", plugin);
-        customConfig.saveDefaultConfig();
-		config = customConfig.getConfig();
+        super("lang.yml", plugin);
         notEnoughMoney = config.getString("NotEnoughMoney");
         commandNoPermission = config.getString("CommandNoPermission");
         shopNoPermission = config.getString("ShopNoPermission");

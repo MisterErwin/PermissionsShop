@@ -1,8 +1,8 @@
 package com.j0ach1mmall3.permissionsshop.api;
 
-import java.util.List;
+import com.j0ach1mmall3.jlib.inventory.CustomItem;
 
-import com.j0ach1mmall3.jlib.objects.CustomItem;
+import java.util.List;
 
 public class Category {
 	private String identifier;
