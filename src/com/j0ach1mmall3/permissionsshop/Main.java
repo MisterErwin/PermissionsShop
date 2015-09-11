@@ -40,7 +40,7 @@ public class Main extends JavaPlugin{
         }
         UpdateChecker checker = new UpdateChecker(5620, getDescription().getVersion());
         if(checker.checkUpdate()){
-            General.sendColoredMessage(this, "A new update is available!" + checker.getVersion(), ChatColor.GOLD);
+            General.sendColoredMessage(this, "A new update is available!", ChatColor.GOLD);
             General.sendColoredMessage(this, "Version " + checker.getVersion() + " (Current: " + getDescription().getVersion() + ")", ChatColor.GOLD);
         } else {
             General.sendColoredMessage(this, "You are up to date!", ChatColor.GREEN);

@@ -50,3 +50,4 @@ Shops:
                 #The commands that will be executed when a Player buys this Package
                 Commands:
                 - 'broadcast %playername% has bought the Example Package!'
+DoNotChange: 2.1.3

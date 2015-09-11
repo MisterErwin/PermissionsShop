@@ -6,3 +6,4 @@ PackageNoPermission: '&4You don''t have permission to buy this Package!'
 ConfirmGuiName: '&1Please confirm your Purchase'
 RefusedPurchase: '&cYou refused your Purchase!'
 SuccessfulPurchase: '&aYou successfully purchased this Package!'
+DoNotChange: 2.1.3
