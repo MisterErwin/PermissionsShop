@@ -8,6 +8,7 @@ import com.j0ach1mmall3.permissionsshop.config.Shops;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class API {
 	private static Shops shops;
@@ -55,11 +56,7 @@ public class API {
 	public static List<Sale> getActiveSales(Shop shop){
 		List<Sale> sales = new ArrayList<>();
 		Date date = new Date();
-		for(Sale s : getSales()){
-			if(date.after(s.getStartDate()) && date.before(s.getEndDate()) && s.getShops().contains(shop.getIdentifier())){
-				sales.add(s);
-			}
-		}
+        sales.addAll(getSales().stream().filter(s -> date.after(s.getStartDate()) && date.before(s.getEndDate()) && s.getShops().contains(shop.getIdentifier())).collect(Collectors.toList()));
 		return sales;
 	}
 	
@@ -92,13 +89,7 @@ public class API {
 	}
 	
 	public static List<Discount> getActiveDiscounts(Shop shop){
-		List<Discount> discounts = new ArrayList<>();
-		for(Discount d : getDiscounts()){
-			if(d.getShops().contains(shop.getIdentifier())){
-				discounts.add(d);
-			}
-		}
-		return discounts;
+        return getDiscounts().stream().filter(d -> d.getShops().contains(shop.getIdentifier())).collect(Collectors.toList());
 	}
 	
 	public static boolean isDiscount(Discount discount){

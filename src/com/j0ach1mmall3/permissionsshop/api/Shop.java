@@ -3,13 +3,13 @@ package com.j0ach1mmall3.permissionsshop.api;
 import java.util.List;
 
 public class Shop {
-	private String identifier;
-	private String command;
-	private String permission;
-	private double price;
-	private String guiName;
-	private List<Category> categories;
-	private List<Package> packages;
+	private final String identifier;
+	private final String command;
+	private final String permission;
+	private final double price;
+	private final String guiName;
+	private final List<Category> categories;
+	private final List<Package> packages;
 	public Shop(String identifier, String command, String permission, double price, String guiName, List<Category> categories, List<Package> packages){
 		this.identifier = identifier;
 		this.command = command;

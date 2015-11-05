@@ -1,26 +1,21 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
-import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
-import com.j0ach1mmall3.jlib.storage.yaml.ConfigMethods;
+import com.j0ach1mmall3.jlib.storage.file.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.Discount;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Discounts extends ConfigLoader {
-    private List<Discount> discounts;
+    private final List<Discount> discounts;
 	public Discounts(Main plugin) {
         super("discounts.yml", plugin);
         discounts = loadDiscounts();
 	}
 	
 	private List<Discount> loadDiscounts(){
-		List<Discount> discounts = new ArrayList<Discount>();
-		for(String discount : ConfigMethods.getKeys(config, "Discounts")){
-			discounts.add(getDiscountByName(discount));
-		}
-		return discounts;
+        return customConfig.getKeys("Discounts").stream().map(this::getDiscountByName).collect(Collectors.toList());
 	}
 	
 	private Discount getDiscountByName(String discount){

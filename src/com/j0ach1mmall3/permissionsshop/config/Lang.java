@@ -1,17 +1,17 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
-import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
+import com.j0ach1mmall3.jlib.storage.file.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
 
 public class Lang extends ConfigLoader {
-	private String notEnoughMoney;
-    private String commandNoPermission;
-    private String shopNoPermission;
-    private String categoryNoPermission;
-    private String packageNoPermission;
-    private String confirmGuiName;
-    private String refusedPurchase;
-    private String successfulPurchase;
+	private final String notEnoughMoney;
+    private final String commandNoPermission;
+    private final String shopNoPermission;
+    private final String categoryNoPermission;
+    private final String packageNoPermission;
+    private final String confirmGuiName;
+    private final String refusedPurchase;
+    private final String successfulPurchase;
 	public Lang(Main plugin) {
         super("lang.yml", plugin);
         notEnoughMoney = config.getString("NotEnoughMoney");

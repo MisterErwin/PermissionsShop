@@ -1,26 +1,34 @@
 package com.j0ach1mmall3.permissionsshop;
 
+import com.j0ach1mmall3.jlib.commands.Command;
 import com.j0ach1mmall3.jlib.integration.UpdateChecker;
+import com.j0ach1mmall3.jlib.integration.vault.EconomyHook;
 import com.j0ach1mmall3.jlib.methods.General;
 import com.j0ach1mmall3.permissionsshop.api.API;
-import com.j0ach1mmall3.permissionsshop.commands.Commands;
+import com.j0ach1mmall3.permissionsshop.commands.PSCommandHandler;
 import com.j0ach1mmall3.permissionsshop.config.*;
 import com.j0ach1mmall3.permissionsshop.listeners.PlayerListener;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collections;
+
 public class Main extends JavaPlugin{
-    private Economy economy = null;
     private Config config;
     private Discounts discounts;
     private Lang lang;
     private Sales sales;
     private Shops shops;
     public void onEnable(){
+        if (new EconomyHook().isRegistered()) {
+            General.sendColoredMessage(this, "Successfully hooked into Vault!", ChatColor.GREEN);
+        } else {
+            General.sendColoredMessage(this, "Failed to hook into Vault!", ChatColor.RED);
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
         General.sendColoredMessage(this, "Loading Configs...", ChatColor.GREEN);
         config = new Config(this);
         lang = new Lang(this);
@@ -29,15 +37,7 @@ public class Main extends JavaPlugin{
         if(config.isEnableSales()) sales = new Sales(this);
         new API(this);
         new PlayerListener(this);
-        getCommand("PermissionsShop").setExecutor(new Commands(this));
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            General.sendColoredMessage(this, "Successfully hooked into Vault!", ChatColor.GREEN);
-            economy = economyProvider.getProvider();
-        } else {
-            General.sendColoredMessage(this, "Failed to hook into Vault!", ChatColor.RED);
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
+        new PSCommandHandler(this).registerCommand(new Command(this, "PermissionsShop", "ps.reload", Collections.singletonList("reload"), "/fft reload"));
         UpdateChecker checker = new UpdateChecker(5620, getDescription().getVersion());
         if(checker.checkUpdate()){
             General.sendColoredMessage(this, "A new update is available!", ChatColor.GOLD);
@@ -49,15 +49,11 @@ public class Main extends JavaPlugin{
     }
 
     public void onDisable(){
-        for(Player p : Bukkit.getOnlinePlayers()){
-            p.closeInventory();
-        }
+        Bukkit.getOnlinePlayers().forEach(org.bukkit.entity.Player::closeInventory);
     }
 
     public void reload() {
-        for(Player p : Bukkit.getOnlinePlayers()){
-            p.closeInventory();
-        }
+        Bukkit.getOnlinePlayers().forEach(org.bukkit.entity.Player::closeInventory);
         config = new Config(this);
         lang = new Lang(this);
         shops = new Shops(this);
@@ -68,11 +64,11 @@ public class Main extends JavaPlugin{
     }
 
     public double getMoney(Player p){
-        return economy.getBalance(p);
+        return new EconomyHook().getEconomy().getBalance(p);
 	}
 
     public void removeMoney(Player p, double amount){
-        economy.withdrawPlayer(p, amount);
+        new EconomyHook().getEconomy().withdrawPlayer(p, amount);
 	}
 
     public Shops getShops() {

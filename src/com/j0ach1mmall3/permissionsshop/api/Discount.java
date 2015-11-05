@@ -3,11 +3,11 @@ package com.j0ach1mmall3.permissionsshop.api;
 import java.util.List;
 
 public class Discount {
-	private String identifier;
-	private String permission;
-	private List<String> shops;
-	private double percentage;
-	private double amount;
+	private final String identifier;
+	private final String permission;
+	private final List<String> shops;
+	private final double percentage;
+	private final double amount;
 	public Discount(String identifier, String permission, List<String> shops, double percentage, double amount){
 		this.identifier = identifier;
 		this.permission = permission;

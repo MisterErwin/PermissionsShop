@@ -4,8 +4,8 @@ import com.j0ach1mmall3.jlib.integration.Placeholders;
 import com.j0ach1mmall3.jlib.inventory.CustomEnchantment;
 import com.j0ach1mmall3.jlib.inventory.CustomItem;
 import com.j0ach1mmall3.jlib.inventory.GUI;
-import com.j0ach1mmall3.jlib.methods.General;
 import com.j0ach1mmall3.jlib.methods.Parsing;
+import com.j0ach1mmall3.jlib.methods.Sounds;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.*;
 import com.j0ach1mmall3.permissionsshop.api.Package;
@@ -26,16 +26,17 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlayerListener implements Listener {
-	private Main plugin;
+	private final Main plugin;
     private GUI shopGui;
     private GUI categoryGui;
     private GUI confirmGui;
-    private Enchantment glow;
-	private HashMap<Player, Shop> shopMap = new HashMap<>();
-	private HashMap<Player, Category> categoryMap = new HashMap<>();
-	private HashMap<Player, Package> packageMap = new HashMap<>();
+    private final Enchantment glow;
+	private final HashMap<Player, Shop> shopMap = new HashMap<>();
+	private final HashMap<Player, Category> categoryMap = new HashMap<>();
+	private final HashMap<Player, Package> packageMap = new HashMap<>();
 	public PlayerListener(Main plugin){
 		this.plugin = plugin;
         CustomEnchantment ce = new CustomEnchantment("SALESGLOW", null, null, 1, 10);
@@ -76,15 +77,9 @@ public class PlayerListener implements Listener {
 	}
 	
 	private ItemStack[] getShopContents(Player p, Shop shop){
-		List<ItemStack> categories = new ArrayList<>();
-		for(Category c : shop.getCategories()){
-			categories.add(c.getItem());
-		}
-		List<ItemStack> packages = new ArrayList<>();
-		for(Package pckage : shop.getPackages()){
-			packages.add(getItem(p, shop, pckage));
-		}
-		List<ItemStack> contents = new ArrayList<>(categories);
+		List<ItemStack> categories = shop.getCategories().stream().map(Category::getItem).collect(Collectors.toList());
+        List<ItemStack> packages = shop.getPackages().stream().map(pckage -> getItem(p, shop, pckage)).collect(Collectors.toList());
+        List<ItemStack> contents = new ArrayList<>(categories);
 		contents.addAll(packages);
 		ItemStack[] finalContents = new ItemStack[contents.size()];
 		for(int a=0;a<contents.size();a++){
@@ -101,7 +96,7 @@ public class PlayerListener implements Listener {
                 e.setCancelled(true);
                 if(e.getSlot() == 10) checkout(p, packageMap.get(p));
                 if(e.getSlot() == 16){
-                    General.playSound(p, Sound.LAVA_POP);
+                    Sounds.playSound(p, Sound.LAVA_POP);
                     p.sendMessage(Placeholders.parse(plugin.getLang().getRefusedPurchase(), p));
                     p.closeInventory();
                 }
@@ -116,24 +111,24 @@ public class PlayerListener implements Listener {
                     if(categoryMap.containsKey(p)){
                         Category category = categoryMap.get(p);
                         if(e.getSlot() == category.getPackages().size()){
-                            General.playSound(p, Sound.CLICK);
+                            Sounds.playSound(p, Sound.CLICK);
                             categoryMap.remove(p);
                             openGUI(p, shop);
                         } else {
-                            General.playSound(p, Sound.CLICK);
+                            Sounds.playSound(p, Sound.CLICK);
                             handlePurchase(p, category.getPackages().get(e.getSlot()));
                         }
                     } else {
                         if(e.getSlot() < shop.getCategories().size()){
                             Category c = shop.getCategories().get(e.getSlot());
                             if(p.hasPermission(c.getPermission())) {
-                                General.playSound(p, Sound.CLICK);
+                                Sounds.playSound(p, Sound.CLICK);
                                 openCategory(p, shop, c);
                             } else {
                                 p.sendMessage(Placeholders.parse(plugin.getLang().getCategoryNoPermission(), p));
                             }
                         } else {
-                            General.playSound(p, Sound.CLICK);
+                            Sounds.playSound(p, Sound.CLICK);
                             handlePurchase(p, shop.getPackages().get(e.getSlot() - shop.getCategories().size()));
                         }
                     }
@@ -187,7 +182,7 @@ public class PlayerListener implements Listener {
 	}
 	
 	private void checkout(Player p, Package pckage){
-        General.playSound(p, Sound.ORB_PICKUP);
+        Sounds.playSound(p, Sound.ORB_PICKUP);
 		p.closeInventory();
 		plugin.removeMoney(p, calculatePrice(p, shopMap.get(p), pckage));
 		shopMap.remove(p);
@@ -196,7 +191,7 @@ public class PlayerListener implements Listener {
 		for(String command : pckage.getCommands()){
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholders.parse(command, p));
 		}
-        General.playSound(p, Sound.LEVEL_UP);
+        Sounds.playSound(p, Sound.LEVEL_UP);
         p.sendMessage(Placeholders.parse(plugin.getLang().getSuccessfulPurchase(), p));
 	}
 	

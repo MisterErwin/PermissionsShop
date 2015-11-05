@@ -1,22 +1,22 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
-import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
+import com.j0ach1mmall3.jlib.storage.file.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
 
 public class Config extends ConfigLoader {
-	private boolean enableDiscounts;
-	private boolean enableSales;
-	private boolean purchaseConfirmation;
-	private String serverAccount;
-	private String returnItem_Name;
-	private String returnItem_Description;
-	private String returnItem_Item;
-	private String confirmItem_Name;
-	private String confirmItem_Description;
-	private String confirmItem_Item;
-	private String refuseItem_Name;
-	private String refuseItem_Description;
-	private String refuseItem_Item;
+	private final boolean enableDiscounts;
+	private final boolean enableSales;
+	private final boolean purchaseConfirmation;
+	private final String serverAccount;
+	private final String returnItem_Name;
+	private final String returnItem_Description;
+	private final String returnItem_Item;
+	private final String confirmItem_Name;
+	private final String confirmItem_Description;
+	private final String confirmItem_Item;
+	private final String refuseItem_Name;
+	private final String refuseItem_Description;
+	private final String refuseItem_Item;
 	public Config(Main plugin) {
         super("config.yml", plugin);
         enableDiscounts = config.getBoolean("EnableDiscounts");

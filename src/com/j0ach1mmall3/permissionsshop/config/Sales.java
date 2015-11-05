@@ -1,20 +1,19 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
 import com.j0ach1mmall3.jlib.methods.Parsing;
-import com.j0ach1mmall3.jlib.storage.yaml.ConfigLoader;
-import com.j0ach1mmall3.jlib.storage.yaml.ConfigMethods;
+import com.j0ach1mmall3.jlib.storage.file.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.Sale;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Sales extends ConfigLoader {
-    private boolean saleGlow;
-    private String salePrefix;
-    private List<Sale> sales;
+    private final boolean saleGlow;
+    private final String salePrefix;
+    private final List<Sale> sales;
 	public Sales(Main plugin){
         super("sales.yml", plugin);
 		saleGlow = config.getBoolean("SaleGlow");
@@ -23,11 +22,7 @@ public class Sales extends ConfigLoader {
 	}
 	
 	private List<Sale> loadSales(){
-		List<Sale> sales = new ArrayList<Sale>();
-		for(String sale : ConfigMethods.getKeys(config, "Sales")){
-			sales.add(getSaleByName(sale));
-		}
-		return sales;
+        return customConfig.getKeys("Sales").stream().map(this::getSaleByName).collect(Collectors.toList());
 	}
 	
 	private Sale getSaleByName(String sale){

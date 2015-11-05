@@ -5,11 +5,11 @@ import com.j0ach1mmall3.jlib.inventory.CustomItem;
 import java.util.List;
 
 public class Package {
-	private String identifier;
-	private String permission;
-	private double price;
-	private CustomItem item;
-	private List<String> commands;
+	private final String identifier;
+	private final String permission;
+	private final double price;
+	private final CustomItem item;
+	private final List<String> commands;
 	public Package(String identifier, String permission, double price, CustomItem item, List<String> commands){
 		this.identifier = identifier;
 		this.permission = permission;

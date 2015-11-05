@@ -5,11 +5,11 @@ import com.j0ach1mmall3.jlib.inventory.CustomItem;
 import java.util.List;
 
 public class Category {
-	private String identifier;
-	private String permission;
-	private double price;
-	private CustomItem item;
-	private List<Package> packages;
+	private final String identifier;
+	private final String permission;
+	private final double price;
+	private final CustomItem item;
+	private final List<Package> packages;
 	public Category(String identifier, String permission, double price, CustomItem item, List<Package> packages){
 		this.identifier = identifier;
 		this.permission = permission;

@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 public class Sale {
-	private String identifier;
-	private String permission;
-	private List<String> shops;
-	private Date startDate;
-	private Date endDate;
-	private double percentage;
-	private double amount;
+	private final String identifier;
+	private final String permission;
+	private final List<String> shops;
+	private final Date startDate;
+	private final Date endDate;
+	private final double percentage;
+	private final double amount;
 	public Sale(String identifier, String permission, List<String> shops, Date startDate, Date endDate, double percentage, double amount){
 		this.identifier = identifier;
 		this.permission = permission;
