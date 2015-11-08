@@ -169,11 +169,9 @@ public class PlayerListener implements Listener {
 		if(config.isPurchaseConfirmation()){
 			ItemStack confirmItem = new CustomItem(Parsing.parseMaterial(config.getConfirmItemItem()), 1, Parsing.parseData(config.getConfirmItemItem()), Placeholders.parse(config.getConfirmItemName(), p), Placeholders.parse(config.getConfirmItemDescription(), p));
 			ItemStack refuseItem = new CustomItem(Parsing.parseMaterial(config.getRefuseItemItem()), 1, Parsing.parseData(config.getRefuseItemItem()), Placeholders.parse(config.getRefuseItemName(), p), Placeholders.parse(config.getRefuseItemDescription(), p));
-			ItemStack[] contents = new ItemStack[]{
-					null, null, null, null, null, null, null, null, null, 
-					null, confirmItem, null, null, pckage.getItem(), null, null, refuseItem, null, 
-					null, null, null, null, null, null, null, null, null};
-			confirmGui = new GUI(Placeholders.parse(lang.getConfirmGuiName(), p), contents);
+            confirmGui.setItem(10, confirmItem);
+            confirmGui.setItem(13, pckage.getItem());
+            confirmGui.setItem(16, refuseItem);
             confirmGui.open(p);
 			packageMap.put(p, pckage);
 		} else {

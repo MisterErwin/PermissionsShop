@@ -1,6 +1,6 @@
 name: PermissionsShop
 main: com.j0ach1mmall3.permissionsshop.Main
-version: 2.1.5
+version: 2.1.6
 author: j0ach1mmall3
 description: Create user friendly GUIs to sell Permissions and more!
 depend: [Vault, JLib]
