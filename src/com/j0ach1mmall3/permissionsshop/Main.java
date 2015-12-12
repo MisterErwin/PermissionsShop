@@ -1,7 +1,7 @@
 package com.j0ach1mmall3.permissionsshop;
 
 import com.j0ach1mmall3.jlib.commands.Command;
-import com.j0ach1mmall3.jlib.integration.UpdateChecker;
+import com.j0ach1mmall3.jlib.integration.updatechecker.AsyncUpdateChecker;
 import com.j0ach1mmall3.jlib.integration.vault.EconomyHook;
 import com.j0ach1mmall3.jlib.methods.General;
 import com.j0ach1mmall3.permissionsshop.api.API;
@@ -37,14 +37,22 @@ public class Main extends JavaPlugin{
         if(config.isEnableSales()) sales = new Sales(this);
         new API(this);
         new PlayerListener(this);
-        new PSCommandHandler(this).registerCommand(new Command(this, "PermissionsShop", "ps.reload", Collections.singletonList("reload"), "/fft reload"));
-        UpdateChecker checker = new UpdateChecker(5620, getDescription().getVersion());
-        if(checker.checkUpdate()){
-            General.sendColoredMessage(this, "A new update is available!", ChatColor.GOLD);
-            General.sendColoredMessage(this, "Version " + checker.getVersion() + " (Current: " + getDescription().getVersion() + ")", ChatColor.GOLD);
-        } else {
-            General.sendColoredMessage(this, "You are up to date!", ChatColor.GREEN);
-        }
+        new PSCommandHandler(this).registerCommand(new Command(this, "PermissionsShop", "ps.reload", Collections.singletonList("reload"), "/ps reload"));
+        AsyncUpdateChecker checker = new AsyncUpdateChecker(this, 5620, getDescription().getVersion());
+        checker.checkUpdate(updateCheckerResult -> {
+            switch (updateCheckerResult.getType()) {
+                case NEW_UPDATE:
+                    General.sendColoredMessage(Main.this, "A new update is available!", ChatColor.GOLD);
+                    General.sendColoredMessage(Main.this, "Version " + updateCheckerResult.getNewVersion() + " (Current: " + Main.this.getDescription().getVersion() + ")", ChatColor.GOLD);
+                    break;
+                case UP_TO_DATE:
+                    General.sendColoredMessage(Main.this, "You are up to date!", ChatColor.GREEN);
+                    break;
+                case ERROR:
+                    General.sendColoredMessage(Main.this, "An error occured while trying to check for updates on spigotmc.org!", ChatColor.RED);
+                    break;
+            }
+        });
         General.sendColoredMessage(this, "Done!", ChatColor.GREEN);
     }
 
