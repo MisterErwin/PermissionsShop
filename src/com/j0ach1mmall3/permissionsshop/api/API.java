@@ -1,118 +1,96 @@
 package com.j0ach1mmall3.permissionsshop.api;
 
 import com.j0ach1mmall3.permissionsshop.Main;
-import com.j0ach1mmall3.permissionsshop.config.Discounts;
-import com.j0ach1mmall3.permissionsshop.config.Sales;
-import com.j0ach1mmall3.permissionsshop.config.Shops;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class API {
-	private static Shops shops;
-    private static Discounts discounts;
-    private static Sales sales;
+	private final List<Shop> shops;
+    private final List<Discount> discounts;
+    private final List<Sale> sales;
     public API(Main plugin) {
-        this.shops = plugin.getShops();
-        this.discounts = plugin.getDiscounts();
-        this.sales = plugin.getSales();
+        this.shops = plugin.getShops().getShops();
+        this.discounts = plugin.getDiscounts().getDiscounts();
+        this.sales = plugin.getSales().getSales();
     }
 
-    public static List<Shop> getShops(){
-		return shops.getShops();
+    public List<Shop> getShops() {
+		return this.shops;
 	}
 	
-	public static boolean isShop(Shop shop){
-		return shops.getShops().contains(shop);
+	public boolean isShop(Shop shop) {
+		return this.shops.contains(shop);
 	}
 	
-	public static boolean isShop(String identifier){
-		for(Shop shop : shops.getShops()){
-			if(shop.getIdentifier().equals(identifier)){
-				return true;
-			}
-		}
-		return false;
+	public boolean isShop(String identifier) {
+		return this.getShop(identifier) != null;
 	}
 	
-	public static Shop getShop(String identifier){
-		if(isShop(identifier)){
-			for(Shop shop : shops.getShops()){
-				if(shop.getIdentifier().equals(identifier)){
-					return shop;
-				}
-			}
-		}
+	public Shop getShop(String identifier) {
+        for(Shop shop : this.shops) {
+            if(shop.getIdentifier().equals(identifier)) return shop;
+        }
 		return null;
 	}
 	
-	public static List<Sale> getSales(){
-		return sales.getSales();
+	public List<Sale> getSales() {
+		return this.sales;
 	}
 	
-	@SuppressWarnings("deprecation")
-	public static List<Sale> getActiveSales(Shop shop){
+	public List<Sale> getActiveSales(Shop shop) {
 		List<Sale> sales = new ArrayList<>();
 		Date date = new Date();
-        sales.addAll(getSales().stream().filter(s -> date.after(s.getStartDate()) && date.before(s.getEndDate()) && s.getShops().contains(shop.getIdentifier())).collect(Collectors.toList()));
+		for(Sale sale : this.sales) {
+            if(date.after(sale.getStartDate()) && date.before(sale.getEndDate()) && sale.getShops().contains(shop.getIdentifier())) sales.add(sale);
+        }
 		return sales;
 	}
 	
-	public static boolean isSale(Sale sale){
-		return sales.getSales().contains(sale);
+	public boolean isSale(Sale sale) {
+		return this.sales.contains(sale);
 	}
 	
-	public static boolean isSale(String identifier){
-		for(Sale sale : sales.getSales()){
-			if(sale.getIdentifier().equals(identifier)){
-				return true;
-			}
-		}
-		return false;
+	public boolean isSale(String identifier) {
+		return this.getSale(identifier) != null;
 	}
 	
-	public static Sale getSale(String identifier){
-		if(isSale(identifier)){
-			for(Sale sale : sales.getSales()){
-				if(sale.getIdentifier().equals(identifier)){
-					return sale;
-				}
-			}
-		}
+	public Sale getSale(String identifier) {
+        for(Sale sale : this.sales) {
+            if(sale.getIdentifier().equals(identifier)) return sale;
+        }
 		return null;
 	}
 	
-	public static List<Discount> getDiscounts(){
-		return discounts.getDiscounts();
+	public List<Discount> getDiscounts() {
+		return this.discounts;
 	}
 	
-	public static List<Discount> getActiveDiscounts(Shop shop){
-        return getDiscounts().stream().filter(d -> d.getShops().contains(shop.getIdentifier())).collect(Collectors.toList());
+	public List<Discount> getActiveDiscounts(Shop shop) {
+        List<Discount> discounts = new ArrayList<>();
+        for(Discount discount : discounts) {
+            if(discount.getShops().contains(shop.getIdentifier())) discounts.add(discount);
+        }
+        return discounts;
 	}
 	
-	public static boolean isDiscount(Discount discount){
-		return discounts.getDiscounts().contains(discount);
+	public boolean isDiscount(Discount discount) {
+		return this.discounts.contains(discount);
 	}
 	
-	public static boolean isDiscount(String identifier){
-		for(Discount discount : discounts.getDiscounts()){
-			if(discount.getIdentifier().equals(identifier)){
-				return true;
-			}
-		}
-		return false;
+	public boolean isDiscount(String identifier) {
+		return this.getDiscount(identifier) != null;
 	}
 	
-	public static Discount getDiscount(String identifier){
-		if(isDiscount(identifier)){
-			for(Discount discount : discounts.getDiscounts()){
-				if(discount.getIdentifier().equals(identifier)){
-					return discount;
-				}
-			}
-		}
+	public Discount getDiscount(String identifier) {
+        for(Discount discount : this.discounts) {
+            if(discount.getIdentifier().equals(identifier)) return discount;
+        }
 		return null;
 	}
+
+    public PathItem getPathItemByPosition(int position, PathItem currentPathItem) {
+        return ((CategoryPackageHolder) currentPathItem).getPathItem(position);
+    }
 }

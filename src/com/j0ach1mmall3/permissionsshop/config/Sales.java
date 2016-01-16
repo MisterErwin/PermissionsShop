@@ -5,54 +5,57 @@ import com.j0ach1mmall3.jlib.storage.file.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.Sale;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Sales extends ConfigLoader {
     private final boolean saleGlow;
     private final String salePrefix;
     private final List<Sale> sales;
-	public Sales(Main plugin){
+	public Sales(Main plugin) {
         super("sales.yml", plugin);
-		saleGlow = config.getBoolean("SaleGlow");
-		salePrefix = config.getString("SalePrefix");
-		sales = loadSales();
+		this.saleGlow = this.config.getBoolean("SaleGlow");
+		this.salePrefix = this.config.getString("SalePrefix");
+		this.sales = this.loadSales();
 	}
 	
-	private List<Sale> loadSales(){
-        return customConfig.getKeys("Sales").stream().map(this::getSaleByName).collect(Collectors.toList());
+	private List<Sale> loadSales() {
+		List<Sale> sales = new ArrayList<>();
+		for(String s : this.customConfig.getKeys("Sales")) {
+			sales.add(this.getSaleByName(s));
+		}
+		return sales;
 	}
 	
-	private Sale getSaleByName(String sale){
+	private Sale getSaleByName(String sale) {
 		String path = "Sales." + sale + ".";
-		String permission = config.getString(path + "Permission");
-		List<String> shops = config.getStringList(path + "Shops");
-		Date startDate = parseDate(config.getString(path + "StartDate"));
-		Date endDate = parseDate(config.getString(path + "EndDate"));
-		double percentage = config.getDouble(path + "Percentage");
-		double amount = config.getDouble(path + "Amount");
+		String permission = this.config.getString(path + "Permission");
+		List<String> shops = this.config.getStringList(path + "Shops");
+		Date startDate = this.parseDate(this.config.getString(path + "StartDate"));
+		Date endDate = this.parseDate(this.config.getString(path + "EndDate"));
+		double percentage = this.config.getDouble(path + "Percentage");
+		double amount = this.config.getDouble(path + "Amount");
 		return new Sale(sale, permission, shops, startDate, endDate, percentage, amount);
 	}
 	
-	@SuppressWarnings("deprecation")
-	private Date parseDate(String s){
+	private Date parseDate(String s) {
 		String[] splitted = s.split("-");
 		Calendar cal = Calendar.getInstance();
-		cal.set(Parsing.parseString(splitted[2]), Parsing.parseString(splitted[1])-1, Parsing.parseString(splitted[0])-1);
+		cal.set(Parsing.parseInt(splitted[2]), Parsing.parseInt(splitted[1])-1, Parsing.parseInt(splitted[0])-1);
 		return cal.getTime();
 	}
 
     public List<Sale> getSales() {
-        return sales;
+        return this.sales;
     }
 
     public String getSalePrefix() {
-        return salePrefix;
+        return this.salePrefix;
     }
 
     public boolean isSaleGlow() {
-        return saleGlow;
+        return this.saleGlow;
     }
 }

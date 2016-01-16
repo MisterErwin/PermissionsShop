@@ -1,40 +1,36 @@
 package com.j0ach1mmall3.permissionsshop.api;
 
-import com.j0ach1mmall3.jlib.inventory.CustomItem;
+import com.j0ach1mmall3.jlib.inventory.GuiItem;
 
 import java.util.List;
 
-public class Package {
-	private final String identifier;
+public class Package extends PathItem {
 	private final String permission;
 	private final double price;
-	private final CustomItem item;
+	private final GuiItem item;
 	private final List<String> commands;
-	public Package(String identifier, String permission, double price, CustomItem item, List<String> commands){
-		this.identifier = identifier;
+
+	public Package(String identifier, String permission, double price, GuiItem item, List<String> commands) {
+		super(identifier);
 		this.permission = permission;
 		this.price = price;
 		this.item = item;
 		this.commands = commands;
 	}
-	
-	public String getIdentifier(){
-		return identifier;
+
+	public String getPermission() {
+		return this.permission;
 	}
-	
-	public String getPermission(){
-		return permission;
+
+	public double getPrice() {
+		return this.price;
 	}
-	
-	public double getPrice(){
-		return price;
+
+	public GuiItem getItem() {
+		return this.item;
 	}
-	
-	public CustomItem getItem(){
-		return item;
-	}
-	
-	public List<String> getCommands(){
-		return commands;
+
+	public List<String> getCommands() {
+		return this.commands;
 	}
 }

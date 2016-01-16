@@ -11,7 +11,7 @@ public class Sale {
 	private final Date endDate;
 	private final double percentage;
 	private final double amount;
-	public Sale(String identifier, String permission, List<String> shops, Date startDate, Date endDate, double percentage, double amount){
+	public Sale(String identifier, String permission, List<String> shops, Date startDate, Date endDate, double percentage, double amount) {
 		this.identifier = identifier;
 		this.permission = permission;
 		this.shops = shops;
@@ -21,31 +21,31 @@ public class Sale {
 		this.amount = amount;
 	}
 	
-	public String getIdentifier(){
-		return identifier;
+	public String getIdentifier() {
+		return this.identifier;
 	}
 	
-	public String getPermission(){
-		return permission;
+	public String getPermission() {
+		return this.permission;
 	}
 	
-	public List<String> getShops(){
-		return shops;
+	public List<String> getShops() {
+		return this.shops;
 	}
 	
-	public Date getStartDate(){
-		return startDate;
+	public Date getStartDate() {
+		return this.startDate;
 	}
 	
-	public Date getEndDate(){
-		return endDate;
+	public Date getEndDate() {
+		return this.endDate;
 	}
 	
-	public double getPercentage(){
-		return percentage;
+	public double getPercentage() {
+		return this.percentage;
 	}
 	
-	public double getAmount(){
-		return amount;
+	public double getAmount() {
+		return this.amount;
 	}
 }

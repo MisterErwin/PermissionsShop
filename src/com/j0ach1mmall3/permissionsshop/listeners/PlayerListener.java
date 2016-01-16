@@ -4,11 +4,17 @@ import com.j0ach1mmall3.jlib.integration.Placeholders;
 import com.j0ach1mmall3.jlib.inventory.CustomEnchantment;
 import com.j0ach1mmall3.jlib.inventory.CustomItem;
 import com.j0ach1mmall3.jlib.inventory.GUI;
-import com.j0ach1mmall3.jlib.methods.Parsing;
+import com.j0ach1mmall3.jlib.inventory.GuiItem;
 import com.j0ach1mmall3.jlib.methods.Sounds;
 import com.j0ach1mmall3.permissionsshop.Main;
-import com.j0ach1mmall3.permissionsshop.api.*;
+import com.j0ach1mmall3.permissionsshop.api.API;
+import com.j0ach1mmall3.permissionsshop.api.Category;
+import com.j0ach1mmall3.permissionsshop.api.CategoryPackageHolder;
+import com.j0ach1mmall3.permissionsshop.api.Discount;
 import com.j0ach1mmall3.permissionsshop.api.Package;
+import com.j0ach1mmall3.permissionsshop.api.PathItem;
+import com.j0ach1mmall3.permissionsshop.api.Sale;
+import com.j0ach1mmall3.permissionsshop.api.Shop;
 import com.j0ach1mmall3.permissionsshop.config.Config;
 import com.j0ach1mmall3.permissionsshop.config.Lang;
 import com.j0ach1mmall3.permissionsshop.config.Sales;
@@ -20,215 +26,177 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class PlayerListener implements Listener {
 	private final Main plugin;
-    private GUI shopGui;
-    private GUI categoryGui;
-    private GUI confirmGui;
     private final Enchantment glow;
-	private final HashMap<Player, Shop> shopMap = new HashMap<>();
-	private final HashMap<Player, Category> categoryMap = new HashMap<>();
-	private final HashMap<Player, Package> packageMap = new HashMap<>();
-	public PlayerListener(Main plugin){
+	private final Map<Player, PathItem> pathMap = new HashMap<>();
+	public PlayerListener(Main plugin) {
 		this.plugin = plugin;
         CustomEnchantment ce = new CustomEnchantment("SALESGLOW", null, null, 1, 10);
         ce.register();
         this.glow = ce.getEnchantment();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        shopMap.clear();
-        categoryMap.clear();
-        packageMap.clear();
 	}
 	
 	@EventHandler(ignoreCancelled=true)
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e){
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e) {
+		Lang lang = this.plugin.getLang();
 		String command = e.getMessage();
-		Shop shop = null;
-		for(Shop shopp : API.getShops()){
-			if(shopp.getCommand().equalsIgnoreCase(command)){
-				shop = shopp;
-			}
-		}
-		if(shop != null){
-			Player p = e.getPlayer();
-			e.setCancelled(true);
-			if(p.hasPermission(shop.getPermission())){
-				openGUI(p, shop);
-			} else {
-				p.sendMessage(Placeholders.parse(plugin.getLang().getShopNoPermission(), p));
+		for(Shop shop : this.plugin.getShops().getShops()) {
+			if(shop.getCommand().equalsIgnoreCase(command)) {
+				Player p = e.getPlayer();
+				e.setCancelled(true);
+				if(p.hasPermission(shop.getPermission())) {
+                    if(this.plugin.getMoney(p) >= shop.getPrice()) this.openGUI(p, shop);
+                    else p.sendMessage(Placeholders.parse(lang.getNotEnoughMoney(), p));
+                } else p.sendMessage(Placeholders.parse(lang.getShopNoPermission(), p));
+				break;
 			}
 		}
 	}
-	
-	private void openGUI(Player p, Shop shop){
-        shopGui = new GUI(Placeholders.parse(shop.getGuiName(), p), getShopContents(p, shop));
-        shopGui.open(p);
-		shopMap.put(p, shop);
-        categoryMap.remove(p);
-        packageMap.remove(p);
-	}
-	
-	private ItemStack[] getShopContents(Player p, Shop shop){
-		List<ItemStack> categories = shop.getCategories().stream().map(Category::getItem).collect(Collectors.toList());
-        List<ItemStack> packages = shop.getPackages().stream().map(pckage -> getItem(p, shop, pckage)).collect(Collectors.toList());
-        List<ItemStack> contents = new ArrayList<>(categories);
-		contents.addAll(packages);
-		ItemStack[] finalContents = new ItemStack[contents.size()];
-		for(int a=0;a<contents.size();a++){
-			finalContents[a] = contents.get(a);
-		}
-		return finalContents;
-	}
-	
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        this.pathMap.remove(e.getPlayer());
+    }
+
 	@EventHandler
-	public void onInventoryClick(InventoryClickEvent e){
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        this.pathMap.remove(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerKick(PlayerKickEvent e) {
+        this.pathMap.remove(e.getPlayer());
+    }
+
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent e) {
+		Config config = this.plugin.getBabies();
+		API api = this.plugin.getApi();
 		Player p = (Player) e.getWhoClicked();
-        if(confirmGui != null) {
-            if(confirmGui.hasClicked(e)){
-                e.setCancelled(true);
-                if(e.getSlot() == 10) checkout(p, packageMap.get(p));
-                if(e.getSlot() == 16){
-                    Sounds.playSound(p, Sound.LAVA_POP);
-                    p.sendMessage(Placeholders.parse(plugin.getLang().getRefusedPurchase(), p));
-                    p.closeInventory();
-                }
-                return;
+        if(config.getConfirmGui().hasClicked(e)) {
+            e.setCancelled(true);
+            if(e.getSlot() == config.getConfirmItem().getPosition()) this.checkout(p, (Package) this.pathMap.get(p));
+            if(e.getSlot() == config.getRefuseItem().getPosition()) {
+                Sounds.playSound(p, Sound.LAVA_POP);
+                p.sendMessage(Placeholders.parse(this.plugin.getLang().getRefusedPurchase(), p));
+                p.closeInventory();
             }
+            return;
         }
-		if(shopMap.containsKey(p)){
-			Shop shop = shopMap.get(p);
-            if(shopGui != null) {
-                if(shopGui.hasClicked(e)){
-                    e.setCancelled(true);
-                    if(categoryMap.containsKey(p)){
-                        Category category = categoryMap.get(p);
-                        if(e.getSlot() == category.getPackages().size()){
-                            Sounds.playSound(p, Sound.CLICK);
-                            categoryMap.remove(p);
-                            openGUI(p, shop);
-                        } else {
-                            Sounds.playSound(p, Sound.CLICK);
-                            handlePurchase(p, category.getPackages().get(e.getSlot()));
-                        }
-                    } else {
-                        if(e.getSlot() < shop.getCategories().size()){
-                            Category c = shop.getCategories().get(e.getSlot());
-                            if(p.hasPermission(c.getPermission())) {
-                                Sounds.playSound(p, Sound.CLICK);
-                                openCategory(p, shop, c);
-                            } else {
-                                p.sendMessage(Placeholders.parse(plugin.getLang().getCategoryNoPermission(), p));
-                            }
-                        } else {
-                            Sounds.playSound(p, Sound.CLICK);
-                            handlePurchase(p, shop.getPackages().get(e.getSlot() - shop.getCategories().size()));
-                        }
-                    }
-                }
-            }
-		}
+        if(this.pathMap.containsKey(p)) {
+            e.setCancelled(true);
+			if(e.getCurrentItem() == null) return;
+			Sounds.playSound(p, config.getClickSound());
+            if(config.getReturnItem().getPosition() == e.getSlot()) {
+				this.openGUI(p, this.pathMap.get(p).getParent());
+				return;
+			}
+            PathItem pathItem = api.getPathItemByPosition(e.getSlot(), this.pathMap.get(p));
+            if(pathItem == null) return;
+            if(pathItem instanceof Package) this.handlePurchase(p, (Package) pathItem);
+            else this.openGUI(p, (Category) pathItem);
+        }
 	}
+
+    private void openGUI(Player p, CategoryPackageHolder categoryPackageHolder) {
+        if(categoryPackageHolder == null) {
+            p.closeInventory();
+            this.pathMap.remove(p);
+        } else {
+            GUI gui = new GUI(Placeholders.parse(categoryPackageHolder.getGuiName(), p), categoryPackageHolder.getGuiSize());
+            gui.setItems(this.getContents(p, categoryPackageHolder));
+            gui.open(p);
+            this.pathMap.put(p, categoryPackageHolder);
+        }
+    }
+
+    private List<GuiItem> getContents(Player p, CategoryPackageHolder categoryPackageHolder) {
+        List<GuiItem> guiItems = new ArrayList<>();
+        for(Category category : categoryPackageHolder.getCategories()) {
+            guiItems.add(category.getItem());
+        }
+        for(Package pckage : categoryPackageHolder.getPackages()) {
+            guiItems.add(this.getItem(p, pckage));
+        }
+        guiItems.add(this.plugin.getBabies().getReturnItem());
+        return guiItems;
+    }
 	
-	private void openCategory(Player p, Shop shop, Category category){
-        categoryGui = new GUI(Placeholders.parse(shop.getGuiName(), p), getCategoryContents(p, shop, category));
-		categoryGui.open(p);
-		categoryMap.put(p, category);
-        packageMap.remove(p);
-	}
-	
-	private ItemStack[] getCategoryContents(Player p, Shop shop, Category category){
-        Config config = plugin.getBabies();
-		ItemStack[] packages = new ItemStack[category.getPackages().size()+1];
-		for(int a=0;a<category.getPackages().size();a++){
-			packages[a] = getItem(p, shop, category.getPackages().get(a));
-		}
-		packages[packages.length-1] = new CustomItem(Parsing.parseMaterial(config.getReturnItemItem()), 1, Parsing.parseData(config.getReturnItemItem()), Placeholders.parse(config.getReturnItemName(), p), Placeholders.parse(config.getReturnItemDescription(), p));
-		return packages;
-	}
-	
-	private void handlePurchase(Player p, Package pckage){
-        Lang lang = plugin.getLang();
-        Config config = plugin.getBabies();
-		p.closeInventory();
-		if(!p.hasPermission(pckage.getPermission())){
+	private void handlePurchase(Player p, Package pckage) {
+        Lang lang = this.plugin.getLang();
+        Config config = this.plugin.getBabies();
+		if(!p.hasPermission(pckage.getPermission())) {
 			p.sendMessage(Placeholders.parse(lang.getPackageNoPermission(), p));
 			return;
 		}
-		if(plugin.getMoney(p) < pckage.getPrice()){
+		if(this.plugin.getMoney(p) < pckage.getPrice()) {
 			p.sendMessage(Placeholders.parse(lang.getNotEnoughMoney(), p));
 			return;
 		}
-		if(config.isPurchaseConfirmation()){
-			ItemStack confirmItem = new CustomItem(Parsing.parseMaterial(config.getConfirmItemItem()), 1, Parsing.parseData(config.getConfirmItemItem()), Placeholders.parse(config.getConfirmItemName(), p), Placeholders.parse(config.getConfirmItemDescription(), p));
-			ItemStack refuseItem = new CustomItem(Parsing.parseMaterial(config.getRefuseItemItem()), 1, Parsing.parseData(config.getRefuseItemItem()), Placeholders.parse(config.getRefuseItemName(), p), Placeholders.parse(config.getRefuseItemDescription(), p));
-            confirmGui.setItem(10, confirmItem);
-            confirmGui.setItem(13, pckage.getItem());
-            confirmGui.setItem(16, refuseItem);
-            confirmGui.open(p);
-			packageMap.put(p, pckage);
-		} else {
-			checkout(p, pckage);
-		}
+		if(config.isPurchaseConfirmation()) {
+            GUI confirmGui = config.getConfirmGui();
+			confirmGui.setItem(13, this.getItem(p, pckage).getItem());
+			confirmGui.setItem(config.getRefuseItem());
+			confirmGui.setItem(config.getConfirmItem());
+			confirmGui.open(p);
+			this.pathMap.put(p, pckage);
+		} else this.checkout(p, pckage);
 	}
 	
-	private void checkout(Player p, Package pckage){
+	private void checkout(Player p, Package pckage) {
         Sounds.playSound(p, Sound.ORB_PICKUP);
 		p.closeInventory();
-		plugin.removeMoney(p, calculatePrice(p, shopMap.get(p), pckage));
-		shopMap.remove(p);
-		categoryMap.remove(p);
-		packageMap.remove(p);
-		for(String command : pckage.getCommands()){
+		double price = this.calculatePrice(p, pckage);
+		this.plugin.removeMoney(p, price);
+		for(String command : pckage.getCommands()) {
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholders.parse(command, p));
 		}
         Sounds.playSound(p, Sound.LEVEL_UP);
-        p.sendMessage(Placeholders.parse(plugin.getLang().getSuccessfulPurchase(), p));
+        p.sendMessage(Placeholders.parse(this.plugin.getLang().getSuccessfulPurchase(), p));
 	}
 	
-	private CustomItem getItem(Player p, Shop shop, Package pckage){
-        Sales sales = plugin.getSales();
-		CustomItem ci = pckage.getItem();
+	private GuiItem getItem(Player p, Package pckage) {
+		API api = this.plugin.getApi();
+		Sales sales = this.plugin.getSales();
+		CustomItem ci = new CustomItem(pckage.getItem().getItem().clone());
 		List<String> lore = ci.getItemMeta().getLore();
-		if(!lore.get(lore.size()-1).contains("Price:")){
-			lore.add(ChatColor.GRAY + "Price: " + calculatePrice(p, shop, pckage));
-			ci.setLore(lore);
+		lore.add(ChatColor.GRAY + "Price: " + this.calculatePrice(p, pckage));
+        ci.setLore(lore);
+		if(!api.getActiveSales(pckage.getShop()).isEmpty()) {
+			if(sales.isSaleGlow()) ci.addEnchantment(this.glow, 1);
+			ci.setName(Placeholders.parse(sales.getSalePrefix(), p) + ci.getName());
 		}
-		if(!API.getActiveSales(shop).isEmpty()){
-			if(sales.isSaleGlow()) ci.addEnchantment(glow, 1);
-			String name = ci.getItemMeta().getDisplayName();
-			if(!name.startsWith(Placeholders.parse(sales.getSalePrefix(), p))) ci.setName(Placeholders.parse(sales.getSalePrefix(), p) + name);
-		}
-		return ci;
+		return new GuiItem(ci, pckage.getItem().getPosition());
 	}
 	
-	private double calculatePrice(Player p, Shop shop, Package pckage){
+	private double calculatePrice(Player p, Package pckage) {
+		API api = this.plugin.getApi();
+		Shop shop = pckage.getShop();
 		double price = pckage.getPrice();
-		for(Discount d : API.getActiveDiscounts(shop)){
-			if(p.hasPermission(d.getPermission())){
-				price = price - ((d.getPercentage()/100)*price);
+		for(Discount d :api.getActiveDiscounts(shop)) {
+			if(p.hasPermission(d.getPermission())) {
+				price = price - ((d.getPercentage() / 100) * price);
 				price = price - d.getAmount();
 			}
 		}
-		for(Sale s : API.getActiveSales(shop)){
-			if(p.hasPermission(s.getPermission())){
-				price = price - ((s.getPercentage()/100)*price);
+		for(Sale s : api.getActiveSales(shop)) {
+			if(p.hasPermission(s.getPermission())) {
+				price = price - ((s.getPercentage() / 100) * price);
 				price = price - s.getAmount();
 			}
 		}
 		return price;
 	}
-
-    public void cleanup() {
-        packageMap.clear();
-        shopMap.clear();
-        categoryMap.clear();
-    }
 }

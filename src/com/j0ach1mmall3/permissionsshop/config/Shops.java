@@ -1,67 +1,88 @@
 package com.j0ach1mmall3.permissionsshop.config;
 
-import com.j0ach1mmall3.jlib.integration.Placeholders;
-import com.j0ach1mmall3.jlib.inventory.CustomItem;
-import com.j0ach1mmall3.jlib.methods.Parsing;
 import com.j0ach1mmall3.jlib.storage.file.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
 import com.j0ach1mmall3.permissionsshop.api.Category;
+import com.j0ach1mmall3.permissionsshop.api.CategoryPackageHolder;
 import com.j0ach1mmall3.permissionsshop.api.Package;
 import com.j0ach1mmall3.permissionsshop.api.Shop;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Shops extends ConfigLoader {
     private final List<Shop> shops;
-	public Shops(Main plugin){
+	public Shops(Main plugin) {
         super("shops.yml", plugin);
-		shops = loadShops();
+		this.shops = this.loadShops();
 	}
 	
-	private List<Shop> loadShops(){
-        return customConfig.getKeys("Shops").stream().map(this::getShopByName).collect(Collectors.toList());
-	}
-	
-	private Shop getShopByName(String shop){
-		String path = "Shops." + shop + ".";
-		String command = config.getString(path + "Command");
-		String permission = config.getString(path + "Permission");
-		double price = config.getDouble(path + "Price");
-		String guiName = config.getString(path + "GuiName");
-		List<Category> categories = customConfig.getKeys(path + "Categories").stream().map(category -> getCategoryByName(shop, category)).collect(Collectors.toList());
-        List<Package> packages = customConfig.getKeys(path + "Packages").stream().map(pckage -> getPackageByName(shop, pckage)).collect(Collectors.toList());
-        return new Shop(shop, command, permission, price, guiName, categories, packages);
-	}
-	
-	private Category getCategoryByName(String shop, String category){
-		String path = "Shops." + shop + ".Categories." + category + ".";
-		String permission = config.getString(path + "Permission");
-		double price = config.getDouble(path + "Price");
-		CustomItem item = new CustomItem(Parsing.parseMaterial(config.getString(path + "Item")), 1, Parsing.parseData(config.getString(path + "Item")), Placeholders.parse(config.getString(path + ".Name")), Placeholders.parse(config.getString(path + ".Description")));
-		List<Package> packages = customConfig.getKeys(path + "Packages").stream().map(pckage -> getPackageByName(shop, category, pckage)).collect(Collectors.toList());
-        return new Category(category, permission, price, item, packages);
-	}
-	
-	private Package getPackageByName(String shop, String category, String pckage){
-		String path = "Shops." + shop + ".Categories." + category + ".Packages." + pckage + ".";
-		String permission = config.getString(path + "Permission");
-		double price = config.getDouble(path + "Price");
-		CustomItem item = new CustomItem(Parsing.parseMaterial(config.getString(path + "Item")), 1, Parsing.parseData(config.getString(path + "Item")), Placeholders.parse(config.getString(path + ".Name")), Placeholders.parse(config.getString(path + ".Description")));
-		List<String> commands = config.getStringList(path + "Commands");
-		return new Package(pckage, permission, price, item, commands);
-	}
-	
-	private Package getPackageByName(String shop, String pckage){
-		String path = "Shops." + shop + ".Packages." + pckage + ".";
-		String permission = config.getString(path + "Permission");
-		double price = config.getDouble(path + "Price");
-		CustomItem item = new CustomItem(Parsing.parseMaterial(config.getString(path + "Item")), 1, Parsing.parseData(config.getString(path + "Item")), Placeholders.parse(config.getString(path + ".Name")), Placeholders.parse(config.getString(path + ".Description")));
-		List<String> commands = config.getStringList(path + "Commands");
-		return new Package(pckage, permission, price, item, commands);
+	private List<Shop> loadShops() {
+        List<Shop> shops = new ArrayList<>();
+		for(String s : this.customConfig.getKeys("Shops")) {
+            shops.add(this.getShop("Shops." + s, s));
+		}
+        return shops;
 	}
 
+    private Shop getShop(String path, String identifier) {
+        Shop shop = new Shop(
+                identifier,
+                this.config.getString(path + ".Command"),
+                this.config.getString(path + ".Permission"),
+                this.config.getDouble(path + ".Price"),
+                this.config.getString(path + ".GuiName"),
+                this.config.getInt(path + ".GuiSize")
+        );
+        shop.setParent(null);
+        shop.setCategories(this.getCategories(path, shop));
+        shop.setPackages(this.getPackages(path, shop));
+        return shop;
+    }
+
+    private List<Category> getCategories(String path, CategoryPackageHolder parent) {
+        List<Category> categories = new ArrayList<>();
+        for(String s : this.customConfig.getKeys(path + ".Categories")) {
+            categories.add(this.getCategory(path + ".Categories." + s, s, parent));
+        }
+        return categories;
+    }
+
+    private Category getCategory(String path, String identifier, CategoryPackageHolder parent) {
+        Category category = new Category(
+                identifier,
+                this.config.getString(path + ".Permission"),
+                this.config.getDouble(path + ".Price"),
+                this.customConfig.getGuiItem(this.config, path),
+                this.config.getInt(path + ".GuiSize")
+        );
+        category.setParent(parent);
+        category.setCategories(this.getCategories(path, category));
+        category.setPackages(this.getPackages(path, category));
+        return category;
+    }
+
+    private List<Package> getPackages(String path, CategoryPackageHolder parent) {
+        List<Package> packages = new ArrayList<>();
+        for(String s : this.customConfig.getKeys(path + ".Packages")) {
+            packages.add(this.getPackage(path + ".Packages." + s, s, parent));
+        }
+        return packages;
+    }
+
+    private Package getPackage(String path, String identifier, CategoryPackageHolder parent) {
+        Package pckage = new Package(
+                identifier,
+                this.config.getString(path + ".Permission"),
+                this.config.getDouble(path + ".Price"),
+                this.customConfig.getGuiItem(this.config, path),
+                this.config.getStringList(path + ".Commands")
+        );
+        pckage.setParent(parent);
+        return pckage;
+    }
+
     public List<Shop> getShops() {
-        return shops;
+        return this.shops;
     }
 }

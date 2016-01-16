@@ -1,6 +1,6 @@
 name: PermissionsShop
 main: com.j0ach1mmall3.permissionsshop.Main
-version: 2.1.6
+version: 3.0.1
 author: j0ach1mmall3
 description: Create user friendly GUIs to sell Permissions and more!
 depend: [Vault, JLib]
@@ -10,11 +10,15 @@ commands:
         usage: /<command> <arguments>
         aliases: ps
 permissions:
-    permissionsshop.*:
+    ps.*:
         description: All the PermissionsShop permissions
         default: op
         children:
-            permissionsshop.reload: true
-    permissionsshop.reload:
+            ps.reload: true
+            ps.debug: true
+    ps.reload:
         description: Access to /PermissionsShop reload
+        default: op
+    ps.debug:
+        description: Access to /PermissionsShop debug
         default: op

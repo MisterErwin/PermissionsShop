@@ -1,24 +1,31 @@
-#If this isn't enabled, the Discounts config file will be ignored
+# If this isn't enabled, the Discounts config file will be ignored
 EnableDiscounts: true
-#If this isn't enabled, the Sales config file will be ignored
+# If this isn't enabled, the Sales config file will be ignored
 EnableSales: true
-#Let Players confirm their Purchase
+# Let Players confirm their Purchase
 PurchaseConfirmation: true
-#The Player account to which the money will be added after a Purchase. Set to '' to ignore.
-ServerAccount: 'j0ach1mmall3'
-#The Item configuration in a Category to return to the Shop overview
+# The Player account (UUID) to which the money will be added after a Purchase. Set to '' to ignore.
+ServerAccount: ''
+# The Confirm Gui Size
+ConfirmGuiSize: 27
+# The Item configuration in a Category to return
 ReturnItem:
-    Name: '&cReturn'
-    Description: '&7&oClick here to return to the Shop overview'
     Item: '262'
-#The Item configuration for the Confirm Item (will only work if PurchaseConfirmation is enabled)
+    Name: '&cReturn'
+    Lore: '&7&oClick here to return'
+    Position: 13
+# The Item configuration for the Confirm Item (will only work if PurchaseConfirmation is enabled)
 ConfirmItem:
-    Name: '&aConfirm'
-    Description: '&7&oClick here to confirm your Purchase'
     Item: '160:13'
-#The Item configuration for the Refuse Item (will only work if PurchaseConfirmation is enabled)
+    Name: '&aConfirm'
+    Lore: '&7&oClick here to confirm your Purchase'
+    Position: 10
+# The Item configuration for the Refuse Item (will only work if PurchaseConfirmation is enabled)
 RefuseItem:
-    Name: '&cRefuse'
-    Description: '&7&oClick here to refuse your Purchase'
     Item: '160:14'
-DoNotChange: 2.1.3
+    Name: '&cRefuse'
+    Lore: '&7&oClick here to refuse your Purchase'
+    Position: 16
+# The sound to be played when a player clicked in the GUI
+ClickSound: CLICK
+DoNotChange: 3.0.0

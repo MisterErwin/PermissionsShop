@@ -8,7 +8,7 @@ public class Discount {
 	private final List<String> shops;
 	private final double percentage;
 	private final double amount;
-	public Discount(String identifier, String permission, List<String> shops, double percentage, double amount){
+	public Discount(String identifier, String permission, List<String> shops, double percentage, double amount) {
 		this.identifier = identifier;
 		this.permission = permission;
 		this.shops = shops;
@@ -16,23 +16,23 @@ public class Discount {
 		this.amount = amount;
 	}
 	
-	public String getIdentifier(){
-		return identifier;
+	public String getIdentifier() {
+		return this.identifier;
 	}
 	
-	public String getPermission(){
-		return permission;
+	public String getPermission() {
+		return this.permission;
 	}
 	
-	public List<String> getShops(){
-		return shops;
+	public List<String> getShops() {
+		return this.shops;
 	}
 	
-	public double getPercentage(){
-		return percentage;
+	public double getPercentage() {
+		return this.percentage;
 	}
 	
-	public double getAmount(){
-		return amount;
+	public double getAmount() {
+		return this.amount;
 	}
 }

@@ -1,53 +1,83 @@
 Shops:
     ExampleShop:
-        #The command that will open the Shop
+        # The command that will open the Shop
         Command: /ExampleShop
-        #The Permission to open the Shop
+        # The Permission to open the Shop
         Permission: permissionsshop.shops.exampleshop
-        #The Price to open the Shop
+        # The Price to open the Shop
         Price: 0.0
-        #The GUI name of the Shop
+        # The GUI name of the Shop
         GuiName: '&6ExampleShop'
+        #  The GUI size of the Shop
+        GuiSize: 18
         Categories:
             ExampleCategory:
-                #The Permission to open the Category
+                # The Permission to open the Category
                 Permission: permissionsshop.shops.exampleshop.categories.examplecategory
-                #The Price to open the Category
+                # The Price to open the Category
                 Price: 0.0
-                #The Display Name of the Category
-                Name: '&2ExampleCategory'
-                #The Description of the Category
-                Description: '&eThis is an Example Category!'
-                #The Item of the Category
+                # The Item of the Category
                 Item: '35:9'
+                # The Display Name of the Category
+                Name: '&2ExampleCategory'
+                # The Description of the Category
+                Lore: '&eThis is an Example Category!'
+                #  The Position in the GUI of the Item
+                Position: 0
+                #  The GUI size of the Category
+                GuiSize: 18
+                #  You can add even more Categories here!
+                Categories:
+                    AnotherExampleCategory:
+                        # The Permission to open the Category
+                        Permission: permissionsshop.shops.exampleshop.categories.examplecategory.categories.anotherexamplecategory
+                        # The Price to open the Category
+                        Price: 0.0
+                        # The Item of the Category
+                        Item: '35:12'
+                        # The Display Name of the Category
+                        Name: '&2AnotherExampleCategory'
+                        # The Description of the Category
+                        Lore: '&eThis is another Example Category!'
+                        #  The Position in the GUI of the Item
+                        Position: 0
+                        #  The GUI size of the Category
+                        GuiSize: 18
+                        #  You can add even more Categories here!
+                        Categories: {}
+                        Packages: {}
                 Packages:
-                    ExamplePackage:
-                        #The Permission to buy the Package
-                        Permission: permissionsshop.shops.exampleshop.categories.examplecategory.packages.examplepackage
-                        #The Price to buy the Package
+                    AnotherExamplePackage:
+                        # The Permission to buy the Package
+                        Permission: permissionsshop.shops.exampleshop.categories.examplecategory.packages.anotherexamplepackage
+                        # The Price to buy the Package
                         Price: 100.0
-                        #The Display Name of the Package
-                        Name: '&2ExamplePackage'
-                        #The Description of the Package
-                        Description: '&eThis is an Example Package!'
-                        #The Item of the Package
-                        Item: '35:10'
-                        #The commands that will be executed when a Player buys this Package
+                        # The Item of the Package
+                        Item: '35:11'
+                        # The Display Name of the Package
+                        Name: '&2AnotherExamplePackage'
+                        # The Description of the Package
+                        Lore: '&eThis is another Example Package!'
+                        #  The Position in the GUI of the Item
+                        Position: 8
+                        # The commands that will be executed when a Player buys this Package
                         Commands:
-                        - 'broadcast %playername% has bought the Example Package!'
+                        - 'broadcast %playername% has bought another Example Package!'
         Packages:
             ExamplePackage:
-                #The Permission to buy the Package
+                # The Permission to buy the Package
                 Permission: permissionsshop.shops.exampleshop.packages.examplepackage
-                #The Price to buy the Package
+                # The Price to buy the Package
                 Price: 100.0
-                #The Display Name of the Package
-                Name: '&2ExamplePackage'
-                #The Description of the Package
-                Description: '&eThis is an Example Package!'
-                #The Item of the Package
+                # The Item of the Package
                 Item: '35:10'
-                #The commands that will be executed when a Player buys this Package
+                # The Display Name of the Package
+                Name: '&2ExamplePackage'
+                # The Description of the Package
+                Lore: '&eThis is an Example Package!'
+                #  The Position in the GUI of the Item
+                Position: 8
+                # The commands that will be executed when a Player buys this Package
                 Commands:
                 - 'broadcast %playername% has bought the Example Package!'
-DoNotChange: 2.1.3
+DoNotChange: 3.0.0

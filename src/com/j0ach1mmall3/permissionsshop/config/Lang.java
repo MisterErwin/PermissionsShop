@@ -14,45 +14,45 @@ public class Lang extends ConfigLoader {
     private final String successfulPurchase;
 	public Lang(Main plugin) {
         super("lang.yml", plugin);
-        notEnoughMoney = config.getString("NotEnoughMoney");
-        commandNoPermission = config.getString("CommandNoPermission");
-        shopNoPermission = config.getString("ShopNoPermission");
-        categoryNoPermission = config.getString("CategoryNoPermission");
-        packageNoPermission = config.getString("PackageNoPermission");
-        confirmGuiName = config.getString("ConfirmGuiName");
-        refusedPurchase = config.getString("RefusedPurchase");
-        successfulPurchase = config.getString("SuccessfulPurchase");
+        this.notEnoughMoney = this.config.getString("NotEnoughMoney");
+        this.commandNoPermission = this.config.getString("CommandNoPermission");
+        this.shopNoPermission = this.config.getString("ShopNoPermission");
+        this.categoryNoPermission = this.config.getString("CategoryNoPermission");
+        this.packageNoPermission = this.config.getString("PackageNoPermission");
+        this.confirmGuiName = this.config.getString("ConfirmGuiName");
+        this.refusedPurchase = this.config.getString("RefusedPurchase");
+        this.successfulPurchase = this.config.getString("SuccessfulPurchase");
 	}
 
     public String getSuccessfulPurchase() {
-        return successfulPurchase;
+        return this.successfulPurchase;
     }
 
     public String getRefusedPurchase() {
-        return refusedPurchase;
+        return this.refusedPurchase;
     }
 
     public String getConfirmGuiName() {
-        return confirmGuiName;
+        return this.confirmGuiName;
     }
 
     public String getCategoryNoPermission() {
-        return categoryNoPermission;
+        return this.categoryNoPermission;
     }
 
     public String getPackageNoPermission() {
-        return packageNoPermission;
+        return this.packageNoPermission;
     }
 
     public String getShopNoPermission() {
-        return shopNoPermission;
+        return this.shopNoPermission;
     }
 
     public String getCommandNoPermission() {
-        return commandNoPermission;
+        return this.commandNoPermission;
     }
 
     public String getNotEnoughMoney() {
-        return notEnoughMoney;
+        return this.notEnoughMoney;
     }
 }
