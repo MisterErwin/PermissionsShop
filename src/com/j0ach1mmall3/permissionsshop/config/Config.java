@@ -8,8 +8,6 @@ import com.j0ach1mmall3.permissionsshop.Main;
 import org.bukkit.Sound;
 
 public class Config extends ConfigLoader {
-	private final boolean enableDiscounts;
-	private final boolean enableSales;
 	private final boolean purchaseConfirmation;
 	private final String serverAccount;
     private final int confirmGuiSize;
@@ -19,8 +17,6 @@ public class Config extends ConfigLoader {
     private final Sound clickSound;
 	public Config(Main plugin) {
         super("config.yml", plugin);
-        this.enableDiscounts = this.config.getBoolean("EnableDiscounts");
-        this.enableSales = this.config.getBoolean("EnableSales");
         this.purchaseConfirmation = this.config.getBoolean("PurchaseConfirmation");
         this.serverAccount = this.config.getString("ServerAccount");
         this.confirmGuiSize = this.config.getInt("ConfirmGuiSize");
@@ -29,14 +25,6 @@ public class Config extends ConfigLoader {
         this.refuseItem = this.customConfig.getGuiItem(this.config, "RefuseItem");
         this.clickSound = Sound.valueOf(this.config.getString("ClickSound").toUpperCase());
 	}
-
-    public boolean isEnableDiscounts() {
-        return this.enableDiscounts;
-    }
-
-    public boolean isEnableSales() {
-        return this.enableSales;
-    }
 
     public boolean isPurchaseConfirmation() {
         return this.purchaseConfirmation;

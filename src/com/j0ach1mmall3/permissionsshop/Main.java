@@ -44,8 +44,8 @@ public class Main extends JavaPlugin{
         this.config = new Config(this);
         this.lang = new Lang(this);
         this.shops = new Shops(this);
-        if(this.config.isEnableDiscounts()) this.discounts = new Discounts(this);
-        if(this.config.isEnableSales()) this.sales = new Sales(this);
+        this.discounts = new Discounts(this);
+        this.sales = new Sales(this);
         this.api = new API(this);
         new PlayerListener(this);
         new PSCommandHandler(this).registerCommand(new Command(this, "PermissionsShop", Arrays.asList("reload", "debug"), "/ps reload, /ps debug", true));
@@ -82,8 +82,8 @@ public class Main extends JavaPlugin{
         this.config = new Config(this);
         this.lang = new Lang(this);
         this.shops = new Shops(this);
-        if(this.config.isEnableDiscounts()) this.discounts = new Discounts(this);
-        if(this.config.isEnableSales()) this.sales = new Sales(this);
+        this.discounts = new Discounts(this);
+        this.sales = new Sales(this);
         this.api = new API(this);
         new PlayerListener(this);
     }

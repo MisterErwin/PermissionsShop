@@ -20,6 +20,7 @@ import com.j0ach1mmall3.permissionsshop.config.Lang;
 import com.j0ach1mmall3.permissionsshop.config.Sales;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -97,7 +98,7 @@ public class PlayerListener implements Listener {
         }
         if(this.pathMap.containsKey(p)) {
             e.setCancelled(true);
-			if(e.getCurrentItem() == null) return;
+			if(e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) return;
 			Sounds.playSound(p, config.getClickSound());
             if(config.getReturnItem().getPosition() == e.getSlot()) {
 				this.openGUI(p, this.pathMap.get(p).getParent());
@@ -156,7 +157,6 @@ public class PlayerListener implements Listener {
 	}
 	
 	private void checkout(Player p, Package pckage) {
-        Sounds.playSound(p, Sound.ORB_PICKUP);
 		p.closeInventory();
 		double price = this.calculatePrice(p, pckage);
 		this.plugin.removeMoney(p, price);
