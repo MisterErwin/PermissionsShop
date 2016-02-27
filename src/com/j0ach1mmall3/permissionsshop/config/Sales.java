@@ -30,7 +30,7 @@ public class Sales extends ConfigLoader {
 	}
 	
 	private Sale getSaleByName(String sale) {
-		String path = "Sales." + sale + ".";
+		String path = "Sales." + sale + '.';
 		String permission = this.config.getString(path + "Permission");
 		List<String> shops = this.config.getStringList(path + "Shops");
 		Date startDate = this.parseDate(this.config.getString(path + "StartDate"));

@@ -20,9 +20,9 @@ public class Config extends ConfigLoader {
         this.purchaseConfirmation = this.config.getBoolean("PurchaseConfirmation");
         this.serverAccount = this.config.getString("ServerAccount");
         this.confirmGuiSize = this.config.getInt("ConfirmGuiSize");
-        this.returnItem = this.customConfig.getGuiItem(this.config, "ReturnItem");
-        this.confirmItem = this.customConfig.getGuiItem(this.config, "ConfirmItem");
-        this.refuseItem = this.customConfig.getGuiItem(this.config, "RefuseItem");
+        this.returnItem = this.customConfig.getGuiItemNew(this.config, "ReturnItem");
+        this.confirmItem = this.customConfig.getGuiItemNew(this.config, "ConfirmItem");
+        this.refuseItem = this.customConfig.getGuiItemNew(this.config, "RefuseItem");
         this.clickSound = Sound.valueOf(this.config.getString("ClickSound").toUpperCase());
 	}
 

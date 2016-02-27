@@ -23,7 +23,7 @@ public class Discounts extends ConfigLoader {
 	}
 	
 	private Discount getDiscount(String discount) {
-		String path = "Discounts." + discount + ".";
+		String path = "Discounts." + discount + '.';
 		String permission = this.config.getString(path + "Permission");
 		List<String> shops = this.config.getStringList(path + "Shops");
 		double percentage = this.config.getDouble(path + "Percentage");

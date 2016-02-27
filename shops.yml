@@ -8,7 +8,7 @@ Shops:
         Price: 0.0
         # The GUI name of the Shop
         GuiName: '&6ExampleShop'
-        #  The GUI size of the Shop
+        # The GUI size of the Shop
         GuiSize: 18
         Categories:
             ExampleCategory:
@@ -17,16 +17,12 @@ Shops:
                 # The Price to open the Category
                 Price: 0.0
                 # The Item of the Category
-                Item: '35:9'
-                # The Display Name of the Category
-                Name: '&2ExampleCategory'
-                # The Description of the Category
-                Lore: '&eThis is an Example Category!'
-                #  The Position in the GUI of the Item
+                Item: '35:9 name:&2ExampleCategory lore:&eThis_is_an_Example_Category!'
+                # The Position in the GUI of the Item
                 Position: 0
-                #  The GUI size of the Category
+                # The GUI size of the Category
                 GuiSize: 18
-                #  You can add even more Categories here!
+                # You can add even more Categories here!
                 Categories:
                     AnotherExampleCategory:
                         # The Permission to open the Category
@@ -34,16 +30,12 @@ Shops:
                         # The Price to open the Category
                         Price: 0.0
                         # The Item of the Category
-                        Item: '35:12'
-                        # The Display Name of the Category
-                        Name: '&2AnotherExampleCategory'
-                        # The Description of the Category
-                        Lore: '&eThis is another Example Category!'
-                        #  The Position in the GUI of the Item
+                        Item: '35:12 name:&2AnotherExampleCategory lore:&eThis_is_another_Example_Category!'
+                        # The Position in the GUI of the Item
                         Position: 0
-                        #  The GUI size of the Category
+                        # The GUI size of the Category
                         GuiSize: 18
-                        #  You can add even more Categories here!
+                        # You can add even more Categories here!
                         Categories: {}
                         Packages: {}
                 Packages:
@@ -53,12 +45,8 @@ Shops:
                         # The Price to buy the Package
                         Price: 100.0
                         # The Item of the Package
-                        Item: '35:11'
-                        # The Display Name of the Package
-                        Name: '&2AnotherExamplePackage'
-                        # The Description of the Package
-                        Lore: '&eThis is another Example Package!'
-                        #  The Position in the GUI of the Item
+                        Item: '35:11 name:&2AnotherExamplePackage lore:&eThis_is_another_Example_Package!'
+                        # The Position in the GUI of the Item
                         Position: 8
                         # The commands that will be executed when a Player buys this Package
                         Commands:
@@ -70,14 +58,10 @@ Shops:
                 # The Price to buy the Package
                 Price: 100.0
                 # The Item of the Package
-                Item: '35:10'
-                # The Display Name of the Package
-                Name: '&2ExamplePackage'
-                # The Description of the Package
-                Lore: '&eThis is an Example Package!'
-                #  The Position in the GUI of the Item
+                Item: '35:10 name:&2ExamplePackage lore:&eThis_is_an_Example_Package!'
+                # The Position in the GUI of the Item
                 Position: 8
                 # The commands that will be executed when a Player buys this Package
                 Commands:
                 - 'broadcast %playername% has bought the Example Package!'
-DoNotChange: 3.0.0
+DoNotChange: 3.1.0

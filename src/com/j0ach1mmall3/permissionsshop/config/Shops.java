@@ -53,7 +53,7 @@ public class Shops extends ConfigLoader {
                 identifier,
                 this.config.getString(path + ".Permission"),
                 this.config.getDouble(path + ".Price"),
-                this.customConfig.getGuiItem(this.config, path),
+                this.customConfig.getGuiItemNew(this.config, path),
                 this.config.getInt(path + ".GuiSize")
         );
         category.setParent(parent);
@@ -75,7 +75,7 @@ public class Shops extends ConfigLoader {
                 identifier,
                 this.config.getString(path + ".Permission"),
                 this.config.getDouble(path + ".Price"),
-                this.customConfig.getGuiItem(this.config, path),
+                this.customConfig.getGuiItemNew(this.config, path),
                 this.config.getStringList(path + ".Commands")
         );
         pckage.setParent(parent);

@@ -20,19 +20,20 @@ public class PSCommandHandler extends CommandHandler {
         this.plugin = plugin;
     }
 
-    public boolean handleCommand(final CommandSender sender, String[] args) {
-        if(args[0].equalsIgnoreCase("reload")) {
-            if(!sender.hasPermission("ps.reload")) {
-                sender.sendMessage(Placeholders.parse(this.plugin.getLang().getCommandNoPermission()));
+    @Override
+    public boolean handleCommand(final CommandSender commandSender, String[] strings) {
+        if(strings[0].equalsIgnoreCase("reload")) {
+            if(!commandSender.hasPermission("ps.reload")) {
+                commandSender.sendMessage(Placeholders.parse(this.plugin.getLang().getCommandNoPermission()));
                 return true;
             }
             this.plugin.reload();
-            sender.sendMessage(ChatColor.GREEN + "All Configs reloaded!");
+            commandSender.sendMessage(ChatColor.GREEN + "All Configs reloaded!");
             return true;
         }
-        if(args[0].equalsIgnoreCase("debug")) {
-            if(!sender.hasPermission("ps.debug")) {
-                sender.sendMessage(Placeholders.parse(this.plugin.getLang().getCommandNoPermission()));
+        if(strings[0].equalsIgnoreCase("debug")) {
+            if(!commandSender.hasPermission("ps.debug")) {
+                commandSender.sendMessage(Placeholders.parse(this.plugin.getLang().getCommandNoPermission()));
                 return true;
             }
             new JLogger(this.plugin).dumpDebug(new StorageAction[0], new ConfigLoader[]{
@@ -43,13 +44,13 @@ public class PSCommandHandler extends CommandHandler {
                     this.plugin.getSales(),
             }, new CallbackHandler<String>() {
                 @Override
-                public void callback(String s) {
-                    sender.sendMessage(ChatColor.GREEN + "Debug dump can be found at " + ChatColor.GOLD + s);
+                public void callback(String o) {
+                    commandSender.sendMessage(ChatColor.GREEN + "Debug dump can be found at " + ChatColor.GOLD + o);
                 }
             });
             return true;
         }
-        sender.sendMessage(ChatColor.RED + "Usage: /ps reload, /ps debug");
+        commandSender.sendMessage(ChatColor.RED + "Usage: /ps reload, /ps debug");
         return true;
     }
 }

@@ -32,6 +32,7 @@ public class Main extends JavaPlugin{
     private API api;
     private EconomyHook economyHook;
 
+    @Override
     public void onEnable() {
         this.economyHook = new EconomyHook();
         if (this.economyHook.isRegistered()) General.sendColoredMessage(this, "Successfully hooked into Vault!", ChatColor.GREEN);
@@ -52,11 +53,11 @@ public class Main extends JavaPlugin{
         AsyncUpdateChecker checker = new AsyncUpdateChecker(this, 5620, this.getDescription().getVersion());
         checker.checkUpdate(new CallbackHandler<UpdateCheckerResult>() {
             @Override
-            public void callback(UpdateCheckerResult updateCheckerResult) {
-                switch (updateCheckerResult.getType()) {
+            public void callback(UpdateCheckerResult o) {
+                switch (o.getType()) {
                     case NEW_UPDATE:
                         General.sendColoredMessage(Main.this, "A new update is available!", ChatColor.GOLD);
-                        General.sendColoredMessage(Main.this, "Version " + updateCheckerResult.getNewVersion() + " (Current: " + Main.this.getDescription().getVersion() + ")", ChatColor.GOLD);
+                        General.sendColoredMessage(Main.this, "Version " + o.getNewVersion() + " (Current: " + Main.this.getDescription().getVersion() + ')', ChatColor.GOLD);
                         break;
                     case UP_TO_DATE:
                         General.sendColoredMessage(Main.this, "You are up to date!", ChatColor.GREEN);
@@ -70,6 +71,7 @@ public class Main extends JavaPlugin{
         General.sendColoredMessage(this, "Done!", ChatColor.GREEN);
     }
 
+    @Override
     public void onDisable() {
         for(Player p : Bukkit.getOnlinePlayers()) {
             Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(p.getOpenInventory()));

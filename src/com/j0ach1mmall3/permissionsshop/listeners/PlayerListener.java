@@ -68,7 +68,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
-        this.pathMap.remove(e.getPlayer());
+        this.pathMap.remove((Player) e.getPlayer());
     }
 
 	@EventHandler

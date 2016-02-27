@@ -8,24 +8,18 @@ PurchaseConfirmation: true
 ServerAccount: ''
 # The Confirm Gui Size
 ConfirmGuiSize: 27
-# The Item configuration in a Category to return
+# The Item configuration in a Category to return (More info here: https://github.com/j0ach1mmall3/JLib/wiki/The-new-Item-Format)
 ReturnItem:
-    Item: '262'
-    Name: '&cReturn'
-    Lore: '&7&oClick here to return'
+    Item: '262 name:&cReturn lore:&7&oClick_here_to_return'
     Position: 13
 # The Item configuration for the Confirm Item (will only work if PurchaseConfirmation is enabled)
 ConfirmItem:
-    Item: '160:13'
-    Name: '&aConfirm'
-    Lore: '&7&oClick here to confirm your Purchase'
+    Item: '160:13 name:&aConfirm lore:&7&oClick_here_to_confirm_your_Purchase'
     Position: 10
 # The Item configuration for the Refuse Item (will only work if PurchaseConfirmation is enabled)
 RefuseItem:
-    Item: '160:14'
-    Name: '&cRefuse'
-    Lore: '&7&oClick here to refuse your Purchase'
+    Item: '160:14 name &cRefuse lore:&7&oClick_here_to_refuse_your_Purchase'
     Position: 16
 # The sound to be played when a player clicked in the GUI
 ClickSound: CLICK
-DoNotChange: 3.0.0
+DoNotChange: 3.1.0
