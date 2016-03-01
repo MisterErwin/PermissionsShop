@@ -90,7 +90,7 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
             if(e.getSlot() == config.getConfirmItem().getPosition()) this.checkout(p, (Package) this.pathMap.get(p));
             if(e.getSlot() == config.getRefuseItem().getPosition()) {
-                Sounds.playSound(p, Sound.LAVA_POP);
+                Sounds.playSound(p, Sound.BLOCK_LAVA_POP);
                 p.sendMessage(Placeholders.parse(this.plugin.getLang().getRefusedPurchase(), p));
                 p.closeInventory();
             }
@@ -163,7 +163,7 @@ public class PlayerListener implements Listener {
 		for(String command : pckage.getCommands()) {
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholders.parse(command, p));
 		}
-        Sounds.playSound(p, Sound.LEVEL_UP);
+        Sounds.playSound(p, Sound.ENTITY_PLAYER_LEVELUP);
         p.sendMessage(Placeholders.parse(this.plugin.getLang().getSuccessfulPurchase(), p));
 	}
 	
