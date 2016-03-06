@@ -1,0 +1,19 @@
+language: java
+jdk:
+  - oraclejdk7
+before_deploy:
+  - git config --global user.email "builds@travis-ci.com"
+  - git config --global user.name "Travis CI"
+  - export GIT_TAG=Build-$TRAVIS_BUILD_NUMBER
+  - echo $GIT_TAG
+  - git tag $GIT_TAG -a -m "PermissionsShop automated build $TRAVIS_BUILD_NUMBER"
+  - git push -q https://$TAGPERM@github.com/j0ach1mmall3/PermissionsShop --tags
+  - ls -R
+deploy:
+  provider: releases
+  api_key:
+    secure: "YWr/jw2fKLomH0W+e3lUH7wPe1fe5LOrbYVV2Tw4z47f+WNhtdhbRw6Fq/pL9uEnIcZbUegnrbfRgM6U9LxI6oARVtxhikNJgSlWJ89A5nLb/m5nApxAG2NbkFeTKrg6iL3gybZYKMNgHBbsjfKe8AF6Wt+bjgxdBapjA9H9e90vdPymbTDUhbOTAgviQWV3v2sr8atRnOxI1PQNyhILVMrWLYClV8DWawWCV+D/Xr8C7tSw4GWC0TdK5Th+RGF5BVw1aCcFP98sNX9PdySMPmJbIkGhHdniF7FEgkDGsn56Q3dbVB+Bg6ne3gor8lN0fS+Fjhxxxz214SITLvXB1aHvqqIqUJcdSWx7e+9U3I8PPlHAr6WUrjv9nANvjTgMsOZs07kiz0XbXE2q4j6wySX2x1ddTaLpmNSCybk7xh4hR0WRY+lOEEL2Rmikur0mpjF/mqLEBf2/j9BNwYFaCYOF+zCC7v5ixutfirMSSFyWDD+pBZVCyXI+r0GAlr3LbK3RDnYTtdr/62MCzyIQ04eRtTLg+MA+HWFla4tVwZct10Mp5qIxcA+mBZFvHsijE2kPYXmVY3j1grfsSC1OBUEk79TzCETNgEHHPTMWEnD/TsYYM/URQw1YviRUSQx7Y9xebiB23Lc7ppHVgrMtqlnHLIUg6M8bY2slarrVuCc="
+  file: "target/PermissionsShop.jar"
+  skip_cleanup: true
+  on:
+    tags: false

@@ -12,18 +12,18 @@ import java.util.List;
 
 public class Shops extends ConfigLoader {
     private final List<Shop> shops;
-	public Shops(Main plugin) {
+    public Shops(Main plugin) {
         super("shops.yml", plugin);
-		this.shops = this.loadShops();
-	}
-	
-	private List<Shop> loadShops() {
+        this.shops = this.loadShops();
+    }
+
+    private List<Shop> loadShops() {
         List<Shop> shops = new ArrayList<>();
-		for(String s : this.customConfig.getKeys("Shops")) {
+        for(String s : this.customConfig.getKeys("Shops")) {
             shops.add(this.getShop("Shops." + s, s));
-		}
+        }
         return shops;
-	}
+    }
 
     private Shop getShop(String path, String identifier) {
         Shop shop = new Shop(
