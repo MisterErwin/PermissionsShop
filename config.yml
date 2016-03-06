@@ -20,6 +20,10 @@ ConfirmItem:
 RefuseItem:
     Item: '160:14 name &cRefuse lore:&7&oClick_here_to_refuse_your_Purchase'
     Position: 16
-# The sound to be played when a player clicked in the GUI
+# The sound to be played when a player clicked in the GUI (Needs to be one of: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
 ClickSound: UI_BUTTON_CLICK
+# The sound to be played when a player confirms a purchase
+ConfirmSound: ENTITY_PLAYER_LEVELUP
+# The sound to be played when a player refuses a purchase
+RefuseSound: BLOCK_LAVA_POP
 DoNotChange: 3.1.0

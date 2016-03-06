@@ -21,7 +21,6 @@ import com.j0ach1mmall3.permissionsshop.config.Sales;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -90,7 +89,7 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
             if(e.getSlot() == config.getConfirmItem().getPosition()) this.checkout(p, (Package) this.pathMap.get(p));
             if(e.getSlot() == config.getRefuseItem().getPosition()) {
-                Sounds.playSound(p, Sound.BLOCK_LAVA_POP);
+                Sounds.playSound(p, config.getRefuseSound());
                 p.sendMessage(Placeholders.parse(this.plugin.getLang().getRefusedPurchase(), p));
                 p.closeInventory();
             }
@@ -163,7 +162,7 @@ public class PlayerListener implements Listener {
 		for(String command : pckage.getCommands()) {
 			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), Placeholders.parse(command, p));
 		}
-        Sounds.playSound(p, Sound.ENTITY_PLAYER_LEVELUP);
+        Sounds.playSound(p, this.plugin.getBabies().getConfirmSound());
         p.sendMessage(Placeholders.parse(this.plugin.getLang().getSuccessfulPurchase(), p));
 	}
 	

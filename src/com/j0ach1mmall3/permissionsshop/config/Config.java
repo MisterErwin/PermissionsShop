@@ -15,6 +15,8 @@ public class Config extends ConfigLoader {
     private final GuiItem confirmItem;
     private final GuiItem refuseItem;
     private final Sound clickSound;
+    private final Sound confirmSound;
+    private final Sound refuseSound;
 	public Config(Main plugin) {
         super("config.yml", plugin);
         this.purchaseConfirmation = this.config.getBoolean("PurchaseConfirmation");
@@ -24,6 +26,8 @@ public class Config extends ConfigLoader {
         this.confirmItem = this.customConfig.getGuiItemNew(this.config, "ConfirmItem");
         this.refuseItem = this.customConfig.getGuiItemNew(this.config, "RefuseItem");
         this.clickSound = Sound.valueOf(this.config.getString("ClickSound").toUpperCase());
+        this.confirmSound = Sound.valueOf(this.config.getString("ConfirmSound").toUpperCase());
+        this.refuseSound = Sound.valueOf(this.config.getString("RefuseSound").toUpperCase());
 	}
 
     public boolean isPurchaseConfirmation() {
@@ -54,5 +58,13 @@ public class Config extends ConfigLoader {
 
     public Sound getClickSound() {
         return this.clickSound;
+    }
+
+    public Sound getConfirmSound() {
+        return this.confirmSound;
+    }
+
+    public Sound getRefuseSound() {
+        return this.refuseSound;
     }
 }
