@@ -9,27 +9,27 @@ import java.util.List;
 
 public class Discounts extends ConfigLoader {
     private final List<Discount> discounts;
-	public Discounts(Main plugin) {
+    public Discounts(Main plugin) {
         super("discounts.yml", plugin);
-		this.discounts = this.loadDiscounts();
-	}
-	
-	private List<Discount> loadDiscounts() {
-		List<Discount> discounts = new ArrayList<>();
+        this.discounts = this.loadDiscounts();
+    }
+
+    private List<Discount> loadDiscounts() {
+        List<Discount> discounts = new ArrayList<>();
         for(String s : this.customConfig.getKeys("Discounts")) {
             discounts.add(this.getDiscount(s));
         }
         return discounts;
-	}
-	
-	private Discount getDiscount(String discount) {
-		String path = "Discounts." + discount + '.';
-		String permission = this.config.getString(path + "Permission");
-		List<String> shops = this.config.getStringList(path + "Shops");
-		double percentage = this.config.getDouble(path + "Percentage");
-		double amount = this.config.getDouble(path + "Amount");
-		return new Discount(discount, permission, shops, percentage, amount);
-	}
+    }
+
+    private Discount getDiscount(String discount) {
+        String path = "Discounts." + discount + '.';
+        String permission = this.config.getString(path + "Permission");
+        List<String> shops = this.config.getStringList(path + "Shops");
+        double percentage = this.config.getDouble(path + "Percentage");
+        double amount = this.config.getDouble(path + "Amount");
+        return new Discount(discount, permission, shops, percentage, amount);
+    }
 
     public List<Discount> getDiscounts() {
         return this.discounts;

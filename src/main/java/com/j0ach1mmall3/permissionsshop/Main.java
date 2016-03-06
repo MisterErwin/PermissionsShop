@@ -17,7 +17,6 @@ import com.j0ach1mmall3.permissionsshop.listeners.PlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -71,14 +70,6 @@ public class Main extends JavaPlugin{
         General.sendColoredMessage(this, "Done!", ChatColor.GREEN);
     }
 
-    @Override
-    public void onDisable() {
-        for(Player p : Bukkit.getOnlinePlayers()) {
-            Bukkit.getPluginManager().callEvent(new InventoryCloseEvent(p.getOpenInventory()));
-            p.closeInventory();
-        }
-    }
-
     public void reload() {
         this.onDisable();
         this.config = new Config(this);
@@ -92,7 +83,7 @@ public class Main extends JavaPlugin{
 
     public double getMoney(Player p) {
         return this.economyHook.getEconomy().getBalance(p);
-	}
+    }
 
     public void removeMoney(Player p, double amount) {
         this.economyHook.getEconomy().withdrawPlayer(p, amount);

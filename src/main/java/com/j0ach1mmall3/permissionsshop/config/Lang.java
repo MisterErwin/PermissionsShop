@@ -4,7 +4,7 @@ import com.j0ach1mmall3.jlib.storage.file.yaml.ConfigLoader;
 import com.j0ach1mmall3.permissionsshop.Main;
 
 public class Lang extends ConfigLoader {
-	private final String notEnoughMoney;
+    private final String notEnoughMoney;
     private final String commandNoPermission;
     private final String shopNoPermission;
     private final String categoryNoPermission;
@@ -12,7 +12,7 @@ public class Lang extends ConfigLoader {
     private final String confirmGuiName;
     private final String refusedPurchase;
     private final String successfulPurchase;
-	public Lang(Main plugin) {
+    public Lang(Main plugin) {
         super("lang.yml", plugin);
         this.notEnoughMoney = this.config.getString("NotEnoughMoney");
         this.commandNoPermission = this.config.getString("CommandNoPermission");
@@ -22,7 +22,7 @@ public class Lang extends ConfigLoader {
         this.confirmGuiName = this.config.getString("ConfirmGuiName");
         this.refusedPurchase = this.config.getString("RefusedPurchase");
         this.successfulPurchase = this.config.getString("SuccessfulPurchase");
-	}
+    }
 
     public String getSuccessfulPurchase() {
         return this.successfulPurchase;
