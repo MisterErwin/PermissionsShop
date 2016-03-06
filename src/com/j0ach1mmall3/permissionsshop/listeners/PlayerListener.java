@@ -48,7 +48,7 @@ public class PlayerListener implements Listener {
         this.glow = ce.getEnchantment();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-	
+
 	@EventHandler(ignoreCancelled=true)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent e) {
 		Lang lang = this.plugin.getLang();
@@ -57,7 +57,7 @@ public class PlayerListener implements Listener {
 			if(shop.getCommand().equalsIgnoreCase(command)) {
 				Player p = e.getPlayer();
 				e.setCancelled(true);
-				if(p.hasPermission(shop.getPermission())) {
+				if(hasPermission(p, shop.getPermission())) {
                     if(this.plugin.getMoney(p) >= shop.getPrice()) this.openGUI(p, shop);
                     else p.sendMessage(Placeholders.parse(lang.getNotEnoughMoney(), p));
                 } else p.sendMessage(Placeholders.parse(lang.getShopNoPermission(), p));
@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
             GUI gui = new GUI(Placeholders.parse(categoryPackageHolder.getGuiName(), p), categoryPackageHolder.getGuiSize());
             gui.setItems(this.getContents(p, categoryPackageHolder));
             gui.open(p);
-            this.pathMap.put(p, categoryPackageHolder);
+            putDelayed(p, categoryPackageHolder);
         }
     }
 
@@ -134,11 +134,11 @@ public class PlayerListener implements Listener {
         guiItems.add(this.plugin.getBabies().getReturnItem());
         return guiItems;
     }
-	
+
 	private void handlePurchase(Player p, Package pckage) {
         Lang lang = this.plugin.getLang();
         Config config = this.plugin.getBabies();
-		if(!p.hasPermission(pckage.getPermission())) {
+		if(!hasPermission(p,pckage.getPermission())) {
 			p.sendMessage(Placeholders.parse(lang.getPackageNoPermission(), p));
 			return;
 		}
@@ -152,10 +152,10 @@ public class PlayerListener implements Listener {
 			confirmGui.setItem(config.getRefuseItem());
 			confirmGui.setItem(config.getConfirmItem());
 			confirmGui.open(p);
-			this.pathMap.put(p, pckage);
+			putDelayed(p, pckage);
 		} else this.checkout(p, pckage);
 	}
-	
+
 	private void checkout(Player p, Package pckage) {
 		p.closeInventory();
 		double price = this.calculatePrice(p, pckage);
@@ -166,12 +166,13 @@ public class PlayerListener implements Listener {
         Sounds.playSound(p, Sound.ENTITY_PLAYER_LEVELUP);
         p.sendMessage(Placeholders.parse(this.plugin.getLang().getSuccessfulPurchase(), p));
 	}
-	
+
 	private GuiItem getItem(Player p, Package pckage) {
 		API api = this.plugin.getApi();
 		Sales sales = this.plugin.getSales();
 		CustomItem ci = new CustomItem(pckage.getItem().getItem().clone());
 		List<String> lore = ci.getItemMeta().getLore();
+		if(lore == null) lore = new ArrayList<>();
 		lore.add(ChatColor.GRAY + "Price: " + this.calculatePrice(p, pckage));
         ci.setLore(lore);
 		if(!api.getActiveSales(pckage.getShop()).isEmpty()) {
@@ -180,23 +181,45 @@ public class PlayerListener implements Listener {
 		}
 		return new GuiItem(ci, pckage.getItem().getPosition());
 	}
-	
+
 	private double calculatePrice(Player p, Package pckage) {
 		API api = this.plugin.getApi();
 		Shop shop = pckage.getShop();
 		double price = pckage.getPrice();
 		for(Discount d :api.getActiveDiscounts(shop)) {
-			if(p.hasPermission(d.getPermission())) {
+			if(hasPermission(p,d.getPermission())) {
 				price = price - ((d.getPercentage() / 100) * price);
 				price = price - d.getAmount();
 			}
 		}
 		for(Sale s : api.getActiveSales(shop)) {
-			if(p.hasPermission(s.getPermission())) {
+			if(hasPermission(p, s.getPermission())) {
 				price = price - ((s.getPercentage() / 100) * price);
 				price = price - s.getAmount();
 			}
 		}
 		return price;
+	}
+
+	private boolean hasPermission(Player player, String permission){
+		if(permission==null)
+			return true;
+		for(String perm : permission.split("&&")){
+			if(perm.startsWith("-")) { //negation
+				if(player.hasPermission(perm.substring(1))) //Remove the '-'
+					return false;
+			}else if(!player.hasPermission(perm))
+					return false;
+		}
+		return true;
+	}
+
+	private void putDelayed(final Player player, final PathItem pathItem){
+		plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+			@Override
+			public void run() {
+				pathMap.put(player, pathItem);
+			}
+		},1);
 	}
 }
