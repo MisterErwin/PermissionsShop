@@ -138,7 +138,11 @@ public class PlayerListener implements Listener {
         Lang lang = this.plugin.getLang();
         Config config = this.plugin.getBabies();
         if(!this.hasPermission(p,pckage.getPermission())) {
-            p.sendMessage(Placeholders.parse(lang.getPackageNoPermission(), p));
+            List<String> missing = getMissingPermissionsInfo(p,pckage.getPermission());
+            if(missing==null||missing.isEmpty())
+                p.sendMessage(Placeholders.parse(lang.getPackageNoPermission(), p));
+            else
+                for(String m:missing) p.sendMessage(m);
             return;
         }
         if(this.plugin.getMoney(p) < pckage.getPrice()) {
@@ -173,6 +177,8 @@ public class PlayerListener implements Listener {
         List<String> lore = ci.getItemMeta().getLore();
         if(lore == null) lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "Price: " + this.calculatePrice(p, pckage));
+        List<String> missing = getMissingPermissionsInfo(p,pckage.getPermission());
+        if(missing != null && !missing.isEmpty()) lore.addAll(missing);
         ci.setLore(lore);
         if(!api.getActiveSales(pckage.getShop()).isEmpty()) {
             if(sales.isSaleGlow()) ci.addEnchantment(this.glow, 1);
@@ -201,7 +207,34 @@ public class PlayerListener implements Listener {
     }
 
     private boolean hasPermission(Player player, String permission){
-        return permission==null || player.hasPermission(permission);
+        if(permission==null)
+            return true;
+        for(String perm : permission.split("&&")){
+            perm = perm.split(":",2)[0];
+            if(perm.startsWith("-")) { //negation
+                if(player.hasPermission(perm.substring(1))) //Remove the '-'
+                    return false;
+            }else if(!player.hasPermission(perm))
+                return false;
+        }
+        return true;
+    }
+
+    private List<String> getMissingPermissionsInfo(Player player, String permission){
+        if(permission==null)
+            return null;
+        List<String> ret = new ArrayList<>();
+        for(String perm : permission.split("&&")){
+            String[] sp = perm.split(":",2);
+            if(sp.length > 1) {
+                if(sp[0].startsWith("-")) {
+                    if(player.hasPermission(sp[0].substring(1)))
+                        ret.add(Placeholders.parse(sp[1],player));
+                }else if(!player.hasPermission(sp[0].substring(1)))
+                    ret.add(Placeholders.parse(sp[1],player));
+            }
+        }
+        return ret;
     }
 
     private void putDelayed(final Player player, final PathItem pathItem){
