@@ -1,0 +1,29 @@
+# If this isn't enabled, the Discounts config file will be ignored
+EnableDiscounts: true
+# If this isn't enabled, the Sales config file will be ignored
+EnableSales: true
+# Let Players confirm their Purchase
+PurchaseConfirmation: true
+# The Player account (UUID) to which the money will be added after a Purchase. Set to '' to ignore.
+ServerAccount: ''
+# The Confirm Gui Size
+ConfirmGuiSize: 27
+# The Item configuration in a Category to return (More info here: https://github.com/j0ach1mmall3/JLib/wiki/The-new-Item-Format)
+ReturnItem:
+    Item: '262 name:&cReturn lore:&7&oClick_here_to_return'
+    Position: 13
+# The Item configuration for the Confirm Item (will only work if PurchaseConfirmation is enabled)
+ConfirmItem:
+    Item: '160:13 name:&aConfirm lore:&7&oClick_here_to_confirm_your_Purchase'
+    Position: 10
+# The Item configuration for the Refuse Item (will only work if PurchaseConfirmation is enabled)
+RefuseItem:
+    Item: '160:14 name &cRefuse lore:&7&oClick_here_to_refuse_your_Purchase'
+    Position: 16
+# The sound to be played when a player clicked in the GUI (Needs to be one of: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html)
+ClickSound: UI_BUTTON_CLICK
+# The sound to be played when a player confirms a purchase
+ConfirmSound: ENTITY_PLAYER_LEVELUP
+# The sound to be played when a player refuses a purchase
+RefuseSound: BLOCK_LAVA_POP
+DoNotChange: 3.1.0
